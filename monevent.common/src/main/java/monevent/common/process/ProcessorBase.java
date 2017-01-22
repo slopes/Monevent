@@ -29,7 +29,7 @@ public abstract class ProcessorBase extends ManageableBase implements IProcessor
         try {
             if (entity == null) return entity;
             if (this.query != null && !this.query.match(entity)) return entity;
-            return doProcess(entity.clone());
+                return doProcess(entity.clone());
         } catch (Exception error) {
             error("Cannot process entity %s.", error, entityName);
             throw new ProcessorException(trace("Cannot process entity %s.", entityName), error);

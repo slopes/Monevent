@@ -22,10 +22,9 @@ public class MetricProcessorTest extends ProcessorTest {
         String valueField = "value";
         long highestTrackableValue = 10000L;
         int numberOfSignificantValueDigits = 2;
-        String cronExpression = "0 0 0 0 0 *";
-        String publication = "dummyProcessor";
+        String metricBus = "metricBus";
         boolean resetOnPublish = true;
-        ProcessorConfiguration configurationWrite = new MetricProcessorConfiguration(name, null,cronExpression,publication, valueField, highestTrackableValue, numberOfSignificantValueDigits,resetOnPublish);
+        ProcessorConfiguration configurationWrite = new MetricProcessorConfiguration(name, null,metricBus, valueField, highestTrackableValue, numberOfSignificantValueDigits);
         File file = new File("src/test/resources/config/processors/" + name + ".json");
         try {
             write(file, configurationWrite);
@@ -34,9 +33,7 @@ public class MetricProcessorTest extends ProcessorTest {
             Assert.assertEquals(valueField, configurationRead.getValueField());
             Assert.assertEquals(highestTrackableValue, configurationRead.getHighestTrackableValue());
             Assert.assertEquals(numberOfSignificantValueDigits, configurationRead.getNumberOfSignificantValueDigits());
-            Assert.assertEquals(publication, configurationRead.getPublication());
-            Assert.assertEquals(resetOnPublish, configurationRead.isResetOnPublish());
-            Assert.assertEquals(cronExpression, configurationRead.getCronExpression());
+            Assert.assertEquals(metricBus, configurationRead.getMetricBus());
         } finally {
             file.delete();
         }
@@ -44,7 +41,7 @@ public class MetricProcessorTest extends ProcessorTest {
 
     @Test
     public void testProcess() throws Exception {
-        IProcessor processor = new MetricProcessor("metricProcessor", null,null,null,null, "value", 10000, 2,false);
+        IProcessor processor = new MetricProcessor("metricProcessor", null,null,null, "value", 10000, 2);
         try {
             processor.start();
             for (int index = 0; index < 100; index++) {

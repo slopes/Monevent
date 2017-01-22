@@ -1,5 +1,6 @@
 package monevent.common.managers;
 
+import monevent.common.communication.EntityBusManager;
 import monevent.common.communication.IEntityBus;
 import monevent.common.model.IEntity;
 import monevent.common.model.fault.Fault;
@@ -15,7 +16,7 @@ import java.net.UnknownHostException;
  * Created by Stephane on 21/11/2015.
  */
 
-    public abstract class ManageableBase implements IManageable {
+public abstract class ManageableBase implements IManageable {
 
     private static final String UNKNOWN_HOST = "undefined";
     private static String hostname;
@@ -72,10 +73,10 @@ import java.net.UnknownHostException;
     }
 
     protected void debug(String trace, Object... args) {
-        ManageableBase.debug(logger,trace,args);
+        ManageableBase.debug(logger, trace, args);
     }
 
-    public static void info(final Logger logger,String trace, Object... args) {
+    public static void info(final Logger logger, String trace, Object... args) {
         if (logger == null) return;
         if (logger.isInfoEnabled()) {
             logger.info(trace(trace, args));
@@ -83,10 +84,10 @@ import java.net.UnknownHostException;
     }
 
     protected void info(String trace, Object... args) {
-        ManageableBase.info(logger,trace,args);
+        ManageableBase.info(logger, trace, args);
     }
 
-    public static void warn(final Logger logger,String trace, Object... args) {
+    public static void warn(final Logger logger, String trace, Object... args) {
         if (logger == null) return;
         if (logger.isWarnEnabled()) {
             logger.warn(trace(trace, args));
@@ -94,10 +95,10 @@ import java.net.UnknownHostException;
     }
 
     protected void warn(String trace, Object... args) {
-        ManageableBase.warn(logger,trace,args);
+        ManageableBase.warn(logger, trace, args);
     }
 
-    public static void error(final Logger logger,String trace, Object... args) {
+    public static void error(final Logger logger, String trace, Object... args) {
         if (logger == null) return;
         if (logger.isErrorEnabled()) {
             logger.error(trace(trace, args));
@@ -105,10 +106,10 @@ import java.net.UnknownHostException;
     }
 
     protected void error(String trace, Object... args) {
-        ManageableBase.error(logger,trace,args);
+        ManageableBase.error(logger, trace, args);
     }
 
-    public static void error(final Logger logger,String trace, Exception exception, Object... args) {
+    public static void error(final Logger logger, String trace, Exception exception, Object... args) {
         if (logger == null) return;
         if (logger.isInfoEnabled()) {
             if (exception != null) {
@@ -118,7 +119,7 @@ import java.net.UnknownHostException;
             }
         }
 
-        if (entityBus != null ) {
+        if (entityBus != null) {
             Fault fault = new Fault("exception");
             fault.setComponent(ManageableBase.getComponent());
             fault.setHost(ManageableBase.hostname);
@@ -127,7 +128,7 @@ import java.net.UnknownHostException;
     }
 
     protected void error(String trace, Exception exception, Object... args) {
-        ManageableBase.error(logger,trace,exception,args);
+        ManageableBase.error(logger, trace, exception, args);
     }
 
     public static String trace(String format, Object... args) {
@@ -161,4 +162,32 @@ import java.net.UnknownHostException;
     }
 
     protected abstract void doStop();
+
+    protected boolean publish(EntityBusManager entityBusManager, String bus, IEntity entity) {
+        if (entity == null) {
+            warn("Cannot publish null entity");
+            return false;
+        }
+
+        if (bus == null) {
+            warn("Cannot publish entity on a null bus");
+            return false;
+        }
+
+        if (entityBusManager == null) {
+            warn("Entity manager is not initialized.");
+            return false;
+        }
+
+        IEntityBus entityBus = entityBusManager.load(bus);
+        if (entityBus != null) {
+            entityBus.publish(entity);
+            return true;
+        } else {
+            warn("The entity bus %s does not exists.", bus);
+        }
+
+
+        return false;
+    }
 }

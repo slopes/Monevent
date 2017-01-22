@@ -1,28 +1,32 @@
 package monevent.common.process.time;
 
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
+import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorBase;
+import monevent.common.process.ProcessorManager;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Stephane on 26/12/2015.
  */
-public abstract class ScheduledProcessorBase extends ProcessorBase {
+public class ScheduledProcessor extends ProcessorBase {
 
     private final String cronExpression;
-    private final String publication;
-    private final EntityBusManager entityBusManager;
+    private final List<String> processors;
+    private final ProcessorManager processorManager;
     private Scheduler scheduler;
 
-    public ScheduledProcessorBase(String name, IQuery query, String cronExpression, String publication, EntityBusManager entityBusManager) {
+    public ScheduledProcessor(String name, IQuery query, String cronExpression, List<String> processors, ProcessorManager processorManager) {
         super(name, query);
         this.cronExpression = cronExpression;
-        this.publication = publication;
-        this.entityBusManager = entityBusManager;
+        this.processors = processors;
+        this.processorManager = processorManager;
     }
 
     @Override
@@ -34,8 +38,6 @@ public abstract class ScheduledProcessorBase extends ProcessorBase {
                 //Create the jod to be executed
                 JobDetail job = JobBuilder.newJob(ScheduledProcessorJob.class).withIdentity(jobKey).build();
                 job.getJobDataMap().put("processor", this);
-                job.getJobDataMap().put("publication", this.publication);
-                job.getJobDataMap().put("entityBusManager", this.entityBusManager);
 
                 Trigger trigger = TriggerBuilder
                         .newTrigger()
@@ -72,6 +74,29 @@ public abstract class ScheduledProcessorBase extends ProcessorBase {
                 error("Cannot stop %s scheduler.", error, getName());
             }
         }
+    }
+
+    @Override
+    protected IEntity doProcess(IEntity entity) throws Exception {
+        if (this.processorManager == null) {
+            warn("ProcessorManager is not initialized !");
+            return null;
+        }
+
+        if (this.processors == null || processors.size() == 0) {
+            warn("List of processors is empty or not initialized !");
+            return null;
+        }
+
+        this.processors.forEach(p -> {
+            IProcessor processor = this.processorManager.load(p);
+            if (processor != null) {
+                processor.process(entity);
+            } else {
+                warn("Cannot load processor %s", p);
+            }
+        });
+        return null;
     }
 }
 

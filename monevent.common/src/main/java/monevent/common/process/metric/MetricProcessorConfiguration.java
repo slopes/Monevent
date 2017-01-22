@@ -3,6 +3,7 @@ package monevent.common.process.metric;
 import monevent.common.communication.EntityBusManager;
 import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
+import monevent.common.process.ProcessorConfiguration;
 import monevent.common.process.ProcessorManager;
 import monevent.common.process.time.ScheduledProcessorConfiguration;
 import monevent.common.store.StoreManager;
@@ -10,11 +11,11 @@ import monevent.common.store.StoreManager;
 /**
  * Created by steph on 12/03/2016.
  */
-public class MetricProcessorConfiguration extends ScheduledProcessorConfiguration {
+public class MetricProcessorConfiguration extends ProcessorConfiguration {
     private String valueField;
     private long highestTrackableValue;
     private int numberOfSignificantValueDigits;
-    private boolean resetOnPublish;
+    private String metricBus;
 
     public MetricProcessorConfiguration() {
         super();
@@ -22,17 +23,15 @@ public class MetricProcessorConfiguration extends ScheduledProcessorConfiguratio
 
     public MetricProcessorConfiguration(String name,
                                         Query query,
-                                        String cronExpression,
-                                        String publication,
+                                        String metricBus,
                                         String valueField,
                                         long highestTrackableValue,
-                                        int numberOfSignificantValueDigits,
-                                        boolean resetOnPublish) {
-        super(name, query,cronExpression,publication);
+                                        int numberOfSignificantValueDigits) {
+        super(name, query);
         this.valueField = valueField;
         this.highestTrackableValue = highestTrackableValue;
         this.numberOfSignificantValueDigits = numberOfSignificantValueDigits;
-        this.resetOnPublish = resetOnPublish;
+        this.metricBus = metricBus;
     }
 
     public String getValueField() {
@@ -59,24 +58,22 @@ public class MetricProcessorConfiguration extends ScheduledProcessorConfiguratio
         this.numberOfSignificantValueDigits = numberOfSignificantValueDigits;
     }
 
-    public boolean isResetOnPublish() {
-        return resetOnPublish;
+    public String getMetricBus() {
+        return metricBus;
     }
 
-    public void setResetOnPublish(boolean resetOnPublish) {
-        this.resetOnPublish = resetOnPublish;
+    public void setMetricBus(String metricBus) {
+        this.metricBus = metricBus;
     }
 
     @Override
     public IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
         return new MetricProcessor(this.getName(),
                 getQuery(),
-                getCronExpression(),
-                getPublication(),
                 entityBusManager,
+                getMetricBus(),
                 getValueField(),
                 getHighestTrackableValue(),
-                getNumberOfSignificantValueDigits(),
-                isResetOnPublish());
+                getNumberOfSignificantValueDigits());
     }
 }

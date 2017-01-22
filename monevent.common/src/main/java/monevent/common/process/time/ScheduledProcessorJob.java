@@ -27,8 +27,6 @@ public class ScheduledProcessorJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         IProcessor processor  = (IProcessor) context.getJobDetail().getJobDataMap().get("processor");
-        EntityBusManager entityBusManager  = (EntityBusManager) context.getJobDetail().getJobDataMap().get("entityBusManager");
-        String publication  = (String) context.getJobDetail().getJobDataMap().get("publication");
 
         if ( processor != null) {
             JobExecution jobExecution = new JobExecution(processor.getName());
@@ -36,12 +34,6 @@ public class ScheduledProcessorJob implements Job {
             jobExecution.setFireId(context.getFireInstanceId());
             try {
                 IEntity result = processor.process(jobExecution);
-                if ( publication != null && entityBusManager != null && result != null) {
-                    IEntityBus entityBus = entityBusManager.load(publication);
-                    if (entityBus != null) {
-                        entityBus.publish(result);
-                    }
-                }
             } catch (Exception error) {
                 ManageableBase.error(logger,"Cannot trigger job %s", error, processor.getName());
             } finally {

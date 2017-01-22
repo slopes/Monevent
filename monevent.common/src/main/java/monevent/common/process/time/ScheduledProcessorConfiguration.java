@@ -1,25 +1,33 @@
 package monevent.common.process.time;
 
+import monevent.common.communication.EntityBusManager;
 import monevent.common.model.query.IQuery;
+import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
+import monevent.common.process.ProcessorManager;
+import monevent.common.process.combine.SequentialProcessor;
 import monevent.common.store.IStore;
+import monevent.common.store.StoreManager;
+
+import java.util.List;
 
 /**
  * Created by slopes on 18/01/17.
  */
-public abstract class ScheduledProcessorConfiguration extends ProcessorConfiguration {
+public class ScheduledProcessorConfiguration extends ProcessorConfiguration {
 
     private String cronExpression;
-    private String publication;
+    private List<String> processors;
 
-    protected ScheduledProcessorConfiguration() {
+    public ScheduledProcessorConfiguration() {
         super();
     }
 
-    protected ScheduledProcessorConfiguration(String name, IQuery query, String cronExpression, String publication) {
+
+    public ScheduledProcessorConfiguration(String name, IQuery query, String cronExpression, List<String> processors) {
         super(name, query);
         this.cronExpression = cronExpression;
-        this.publication = publication;
+        this.processors = processors;
     }
 
     public String getCronExpression() {
@@ -30,11 +38,17 @@ public abstract class ScheduledProcessorConfiguration extends ProcessorConfigura
         this.cronExpression = cronExpression;
     }
 
-    public String getPublication() {
-        return publication;
+    public List<String> getProcessors() {
+        return processors;
     }
 
-    public void setPublication(String publication) {
-        this.publication = publication;
+    public void setProcessors(List<String> processors) {
+        this.processors = processors;
     }
+
+    @Override
+    protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
+        return new ScheduledProcessor(getName(),getQuery(),getCronExpression(),getProcessors(),processorManager);
+    }
+
 }

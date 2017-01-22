@@ -50,12 +50,7 @@ public abstract class AlertProcessorBase extends ProcessorBase {
                 alert.isToBeClosed(true);
             }
 
-            if (alertBus != null && entityBusManager != null) {
-                IEntityBus entityBus = entityBusManager.load(alertBus);
-                if (entityBus != null) {
-                    entityBus.publish(alert);
-                }
-            }
+            publish(entityBusManager,alertBus,alert);
         }
         return alert;
     }
