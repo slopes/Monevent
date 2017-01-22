@@ -1,0 +1,28 @@
+{
+  "sortOrder": null,
+  "sortField": null,
+  "name": "writeQuery",
+  "id": "71aceac0-e87a-11e5-bcdb-08606e047568",
+  "criteria": [
+    {
+      "field": "name",
+      "value": "EventA",
+      "type": "Is"
+    },
+    {
+      "field": "type",
+      "value": "event",
+      "type": "Is"
+    },
+    {
+      "field": "@timestamp",
+      "value": "2016-03-12T17:47:09.591Z",
+      "type": "GreaterThan"
+    },
+    {
+      "field": "value",
+      "value": 12.0,
+      "type": "LesserThan"
+    }
+  ]
+}

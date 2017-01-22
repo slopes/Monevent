@@ -1,0 +1,19 @@
+{
+  "@class": "monevent.common.process.store.StoreProcessorConfiguration",
+  "id": null,
+  "name": "storeProcessor",
+  "query": {
+    "sortOrder": null,
+    "sortField": null,
+    "name": null,
+    "id": "bfaf3780-e8a4-11e5-be2a-08606e047568",
+    "criteria": [
+      {
+        "field": "processor",
+        "value": "storeProcessor",
+        "type": "Is"
+      }
+    ]
+  },
+  "storeName": "memoryStore"
+}
