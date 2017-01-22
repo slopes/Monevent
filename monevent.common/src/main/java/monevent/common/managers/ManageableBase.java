@@ -30,10 +30,6 @@ public abstract class ManageableBase implements IManageable {
         }
     }
 
-    public synchronized static void setComponent(String component) {
-        ManageableBase.component = component;
-    }
-
     public static String getComponent() {
         return ManageableBase.component;
     }
@@ -135,7 +131,7 @@ public abstract class ManageableBase implements IManageable {
         return String.format(format, args);
     }
 
-    public void start() throws ProcessorException {
+    public void start() throws ManageableException {
         debug("Starting %s ...", getName());
         try {
             doStart();
@@ -149,7 +145,7 @@ public abstract class ManageableBase implements IManageable {
 
     protected abstract void doStart();
 
-    public void stop() throws ProcessorException {
+    public void stop() throws ManageableException {
         debug("Stopping %s ...", getName());
         try {
             doStop();

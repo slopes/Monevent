@@ -1,11 +1,7 @@
 package monevent.common.process.alert;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import monevent.common.communication.EntityBusManager;
-import monevent.common.communication.IEntityBus;
-import monevent.common.communication.IEntityBusFactory;
-import monevent.common.communication.local.LocalEntityBus;
 import monevent.common.managers.ManageableBase;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
@@ -14,10 +10,6 @@ import monevent.common.model.event.Event;
 import monevent.common.model.query.Query;
 import monevent.common.model.query.QueryCriterionType;
 import monevent.common.process.*;
-import monevent.common.process.alert.MatchAlertProcessorConfiguration;
-import monevent.common.process.combine.SequentialProcessor;
-import monevent.common.process.combine.SequentialProcessorConfiguration;
-import monevent.common.process.communication.BusProcessor;
 import monevent.common.process.communication.BusProcessorConfiguration;
 import monevent.common.process.metric.MetricProcessorConfiguration;
 import monevent.common.process.store.StoreProcessorConfiguration;

@@ -3,14 +3,12 @@ package monevent.common.process.combine;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
 import monevent.common.process.*;
-import monevent.common.process.metric.MetricProcessorConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 

@@ -1,5 +1,6 @@
 package monevent.common.process;
 
+import monevent.common.managers.ManageableException;
 import monevent.common.model.IEntity;
 
 import java.util.Map;
@@ -23,12 +24,12 @@ public class GenericProcessorFactory implements  IProcessorFactory{
     }
 
     @Override
-    public void start() throws ProcessorException {
+    public void start() throws ManageableException {
 
     }
 
     @Override
-    public void stop() throws ProcessorException {
+    public void stop() throws ManageableException {
 
     }
 

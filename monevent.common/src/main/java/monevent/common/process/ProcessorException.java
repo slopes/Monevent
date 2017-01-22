@@ -1,9 +1,11 @@
 package monevent.common.process;
 
+import monevent.common.managers.ManageableException;
+
 /**
  * Created by Stephane on 20/11/2015.
  */
-public class ProcessorException extends RuntimeException {
+public class ProcessorException extends ManageableException {
 
     private static final long serialVersionUID = 2481765691453713637L;
 

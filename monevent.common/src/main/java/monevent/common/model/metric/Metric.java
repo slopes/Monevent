@@ -1,6 +1,7 @@
 package monevent.common.model.metric;
 
 
+import monevent.common.managers.ManageableException;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
 import org.joda.time.DateTime;
@@ -187,12 +188,12 @@ public class Metric extends Entity implements IMetric {
     }
 
     @Override
-    public void start() {
+    public void start() throws ManageableException {
         setStart(DateTime.now(DateTimeZone.UTC));
     }
 
     @Override
-    public void stop() {
+    public void stop() throws ManageableException {
         setStop(DateTime.now(DateTimeZone.UTC));
     }
 

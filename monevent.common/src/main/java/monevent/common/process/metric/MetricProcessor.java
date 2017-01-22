@@ -1,7 +1,6 @@
 package monevent.common.process.metric;
 
 import monevent.common.communication.EntityBusManager;
-import monevent.common.communication.IEntityBus;
 import monevent.common.model.IEntity;
 import monevent.common.model.metric.FixedMetric;
 import monevent.common.model.metric.IMetric;
