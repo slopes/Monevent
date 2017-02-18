@@ -1,6 +1,8 @@
 package monevent.common.process.metric;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -28,6 +30,7 @@ public class MetricProcessorConfiguration extends ProcessorConfiguration {
                                         int numberOfSignificantValueDigits) {
         super(name, query);
         this.valueField = valueField;
+        //TODO : set default values for metric histograms
         this.highestTrackableValue = highestTrackableValue;
         this.numberOfSignificantValueDigits = numberOfSignificantValueDigits;
         this.metricBus = metricBus;
@@ -63,6 +66,15 @@ public class MetricProcessorConfiguration extends ProcessorConfiguration {
 
     public void setMetricBus(String metricBus) {
         this.metricBus = metricBus;
+    }
+
+    @Override
+    public void check() throws ConfigurationException {
+        super.check();
+        if (Strings.isNullOrEmpty(getValueField()))
+            throw new ConfigurationException("The value field cannot be null or empty.");
+        if (Strings.isNullOrEmpty(getMetricBus()))
+            throw new ConfigurationException("The metric bus cannot be null or empty.");
     }
 
     @Override

@@ -1,6 +1,8 @@
 package monevent.common.process.time;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -42,6 +44,17 @@ public class ScheduledProcessorConfiguration extends ProcessorConfiguration {
 
     public void setProcessors(List<String> processors) {
         this.processors = processors;
+    }
+
+    @Override
+    public void check() throws ConfigurationException {
+        //TODO : Add check of the cron itself
+        super.check();
+        if (Strings.isNullOrEmpty(getCronExpression()))
+            throw new ConfigurationException("The cron expression cannot be null or empty.");
+        if (getProcessors() == null || getProcessors().size() ==0)
+            throw new ConfigurationException("The list of processors cannot be null or empty.");
+
     }
 
     @Override

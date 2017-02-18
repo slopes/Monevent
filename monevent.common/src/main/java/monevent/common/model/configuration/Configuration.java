@@ -8,7 +8,7 @@ import monevent.common.model.IDistinguishable;
  * Created by steph on 28/02/2016.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public class Configuration implements IDistinguishable {
+public abstract class Configuration implements IDistinguishable {
     private String id;
     private String name;
     public Configuration() {
@@ -35,7 +35,6 @@ public class Configuration implements IDistinguishable {
     }
 
 
-
-
+    public abstract void check() throws ConfigurationException ;
 
 }

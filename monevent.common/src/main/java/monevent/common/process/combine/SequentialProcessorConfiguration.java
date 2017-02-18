@@ -1,6 +1,8 @@
 package monevent.common.process.combine;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -43,7 +45,19 @@ public class SequentialProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
+    public void check() throws ConfigurationException {
+        super.check();
+        if (getPoolSize() <= 0)
+            throw new ConfigurationException("The pool size must be strickly positive.");
+        if (getProcessors() == null || getProcessors().size() ==0)
+            throw new ConfigurationException("The list of processors cannot be null or empty.");
+
+    }
+
+    @Override
     protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
         return new SequentialProcessor(getName(),getQuery(), processorManager, getProcessors());
     }
+
+
 }

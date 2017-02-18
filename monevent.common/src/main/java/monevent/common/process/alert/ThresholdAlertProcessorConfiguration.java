@@ -1,6 +1,8 @@
 package monevent.common.process.alert;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorManager;
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  * Created by steph on 12/03/2016.
  */
 public class ThresholdAlertProcessorConfiguration extends AlertProcessorConfiguration {
+    //TODO: implement reverse mechanism
     private double fatalThreshold;
     private double criticalThreshold;
     private double mediumThreshold;
@@ -95,7 +98,7 @@ public class ThresholdAlertProcessorConfiguration extends AlertProcessorConfigur
 
     @Override
     public IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new ThresholdAlertProcessor(getName(),getQuery(), entityBusManager,getAlertBus(),
+        return new ThresholdAlertProcessor(getName(), getQuery(), entityBusManager, getAlertBus(),
                 getUserMessage(),
                 getCloseAfterDelay(),
                 getCloseAfterDelayTimeUnit(),
@@ -105,5 +108,20 @@ public class ThresholdAlertProcessorConfiguration extends AlertProcessorConfigur
                 getLowThreshold(),
                 getInfoThreshold(),
                 getValueField());
+    }
+
+    @Override
+    public void check() throws ConfigurationException {
+        super.check();
+        if (Strings.isNullOrEmpty(getValueField()))
+            throw new ConfigurationException("The value filed cannot be null.");
+        if (getFatalThreshold() < getCriticalThreshold())
+            throw new ConfigurationException("The fatal threshold must exceed the critical threshold.");
+        if (getCriticalThreshold() < getMediumThreshold())
+            throw new ConfigurationException("The critical threshold must exceed the medium threshold.");
+        if (getMediumThreshold() < getLowThreshold())
+            throw new ConfigurationException("The medium threshold must exceed the low threshold.");
+        if (getLowThreshold() < getInfoThreshold())
+            throw new ConfigurationException("The low threshold must exceed the info threshold.");
     }
 }

@@ -1,5 +1,6 @@
 package monevent.common.process;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
 import monevent.common.model.configuration.Configuration;
 import monevent.common.model.configuration.ConfigurationException;
@@ -38,5 +39,13 @@ public abstract class ProcessorConfiguration extends Configuration {
         }
     }
 
+    public void check() throws ConfigurationException {
+
+        if (Strings.isNullOrEmpty(getName()))
+            throw new ConfigurationException("The name of the processor cannot be null.");
+    }
+
     protected abstract IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager);
+
+
 }

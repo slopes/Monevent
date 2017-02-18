@@ -3,6 +3,7 @@
   "name": "eventProcessor",
   "matchingList": [
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idA"
       ],
@@ -25,6 +26,7 @@
       ]
     },
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idA",
         "idB"
@@ -49,6 +51,7 @@
       ]
     },
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idB",
         "idC"
@@ -73,6 +76,7 @@
       ]
     },
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idC",
         "idD"
@@ -97,6 +101,7 @@
       ]
     },
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idD",
         "idE"
@@ -121,6 +126,7 @@
       ]
     },
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idE",
         "idF"
@@ -145,6 +151,7 @@
       ]
     },
     {
+      "@class": "monevent.common.process.matching.Matching",
       "fields": [
         "idF",
         "idG"

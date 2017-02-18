@@ -1,6 +1,9 @@
 package monevent.common.process.matching;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import monevent.common.model.configuration.Configuration;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
 /**
  * Created by slopes on 01/02/17.
  */
-public class Matching {
+public class Matching extends Configuration {
     private List<String> fields;
     private IQuery query;
     private long expectedMatch;
@@ -65,5 +68,18 @@ public class Matching {
 
     public void setCommands(List<String> commands) {
         this.commands = commands;
+    }
+
+    @Override
+    public void check() throws ConfigurationException {
+        if (Strings.isNullOrEmpty(getName()))
+            throw new ConfigurationException("The name opf the matching cannot be null or empty.");
+        if (getExpectedMatch() <= 0)
+            throw new ConfigurationException("Expected match must be strictly positive.");
+        if (Strings.isNullOrEmpty(getType()))
+            throw new ConfigurationException("The type cannot be null or empty.");
+        if (getFields() == null || getFields().size() ==0)
+            throw new ConfigurationException("The list of fields cannot be null or empty.");
+
     }
 }

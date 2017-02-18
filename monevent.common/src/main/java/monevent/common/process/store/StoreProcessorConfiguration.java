@@ -1,6 +1,8 @@
 package monevent.common.process.store;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
@@ -15,7 +17,6 @@ import monevent.common.store.StoreManager;
 public class StoreProcessorConfiguration extends ProcessorConfiguration {
 
     private String storeName;
-    private IQuery storeQuery;
 
     public StoreProcessorConfiguration() {
         super();
@@ -35,6 +36,13 @@ public class StoreProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
+    public void check() throws ConfigurationException {
+        super.check();
+        if (Strings.isNullOrEmpty(getStoreName()))
+            throw new ConfigurationException("The store name cannot be null or empty.");
+    }
+
+    @Override
     public IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
         IStore store = storeManager.load(this.getStoreName());
         if (store != null) {
@@ -42,4 +50,6 @@ public class StoreProcessorConfiguration extends ProcessorConfiguration {
         }
         return null;
     }
+
+
 }

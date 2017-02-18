@@ -1,6 +1,8 @@
 package monevent.common.process.matching.memory;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorManager;
@@ -31,4 +33,7 @@ public class MemoryMatchingProcessorConfiguration extends MatchingProcessorConfi
     protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
         return new MemoryMatchingProcessor(getName(), getQuery(), getMatchingList(), entityBusManager, getResultBus());
     }
+
+
+
 }

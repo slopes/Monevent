@@ -1,6 +1,8 @@
 package monevent.common.process.communication;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -44,8 +46,14 @@ public class BusProcessorConfiguration extends ProcessorConfiguration {
 
     @Override
     protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new BusProcessor(getName(),getQuery(),entityBusManager,getSubscriptions(),processorManager,getPublications());
+        return new BusProcessor(getName(), getQuery(), entityBusManager, getSubscriptions(), processorManager, getPublications());
     }
 
-
+    public void check() throws ConfigurationException {
+        super.check();
+        if (getPublications() == null || getPublications().size() ==0)
+            throw new ConfigurationException("The list of publications cannot be null or empty.");
+        if (getSubscriptions() == null || getSubscriptions().size() ==0)
+            throw new ConfigurationException("The list of subscriptions cannot be null or empty.");
+    }
 }

@@ -1,7 +1,9 @@
 package monevent.common.process.command;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -14,7 +16,7 @@ import java.util.List;
  * Created by slopes on 07/02/17.
  */
 public class CommandProcessorConfiguration extends ProcessorConfiguration {
-    List<String> commands;
+    private List<String> commands;
 
     public CommandProcessorConfiguration() {
         this.commands = Lists.newArrayList();
@@ -33,8 +35,17 @@ public class CommandProcessorConfiguration extends ProcessorConfiguration {
         this.commands = commands;
     }
 
+
+    @Override
+    public void check() throws ConfigurationException {
+        super.check();
+        if (getCommands() == null || getCommands().size() == 0)
+            throw new ConfigurationException("The list of commands cannot be null or empty.");
+
+    }
+
     @Override
     protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new CommandProcessor(getName(),getQuery(),getCommands());
+        return new CommandProcessor(getName(), getQuery(), getCommands());
     }
 }

@@ -1,5 +1,7 @@
 package monevent.common.process.alert;
 
+import com.google.common.base.Strings;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.ProcessorConfiguration;
 
@@ -56,5 +58,16 @@ public abstract class AlertProcessorConfiguration extends ProcessorConfiguration
 
     public void setAlertBus(String alertBus) {
         this.alertBus = alertBus;
+    }
+
+    public void check() throws ConfigurationException {
+        super.check();
+        if (Strings.isNullOrEmpty(getAlertBus()))
+            throw new ConfigurationException("Alert bus cannot be null.");
+        if (Strings.isNullOrEmpty(getUserMessage()))
+            throw new ConfigurationException("User message cannot be null.");
+        if ( getCloseAfterDelay() < 0 )
+            throw new ConfigurationException("Closing delay must be strictly positive.");
+
     }
 }

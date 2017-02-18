@@ -1,7 +1,9 @@
 package monevent.common.process.alert;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
 import monevent.common.model.alert.AlertPriority;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorManager;
@@ -42,4 +44,6 @@ public class MatchAlertProcessorConfiguration extends AlertProcessorConfiguratio
                 getCloseAfterDelayTimeUnit(),
                 getPriority());
     }
+
+
 }

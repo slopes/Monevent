@@ -1,6 +1,8 @@
 package monevent.common.process.combine;
 
+import com.google.common.base.Strings;
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -18,7 +20,7 @@ public class PoolProcessorConfiguration extends ProcessorConfiguration {
         super();
     }
 
-    public PoolProcessorConfiguration(String name, IQuery query,String processorName, int poolSize) {
+    public PoolProcessorConfiguration(String name, IQuery query, String processorName, int poolSize) {
         super(name, query);
         this.processorName = processorName;
         this.poolSize = poolSize;
@@ -42,6 +44,14 @@ public class PoolProcessorConfiguration extends ProcessorConfiguration {
 
     @Override
     protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new PoolProcessor(getName(),getQuery(),getPoolSize(), processorManager, getProcessorName());
+        return new PoolProcessor(getName(), getQuery(), getPoolSize(), processorManager, getProcessorName());
+    }
+
+    public void check() throws ConfigurationException {
+        super.check();
+        if (Strings.isNullOrEmpty(processorName))
+            throw new ConfigurationException("The name of the processor cannot be null or empty.");
+        if (getPoolSize() <= 0)
+            throw new ConfigurationException("The pool size must be strictly positive.");
     }
 }

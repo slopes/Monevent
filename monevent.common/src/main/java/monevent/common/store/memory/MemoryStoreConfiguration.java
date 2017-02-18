@@ -1,5 +1,7 @@
 package monevent.common.store.memory;
 
+import com.google.common.base.Strings;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.store.IStore;
 import monevent.common.store.StoreConfiguration;
 
@@ -20,4 +22,7 @@ public class MemoryStoreConfiguration extends StoreConfiguration{
     public IStore build() {
         return new MemoryStore(this.getName());
     }
+
+
+
 }

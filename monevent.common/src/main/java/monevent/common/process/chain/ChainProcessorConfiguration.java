@@ -1,6 +1,8 @@
 package monevent.common.process.chain;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.ProcessorConfiguration;
 
@@ -39,5 +41,15 @@ public abstract class ChainProcessorConfiguration extends ProcessorConfiguration
 
     public void setResultBus(String resultBus) {
         this.resultBus = resultBus;
+    }
+
+    @Override
+    public void check() throws ConfigurationException {
+        super.check();
+        if (Strings.isNullOrEmpty(getResultBus()))
+            throw new ConfigurationException("The result bus cannot be null or empty.");
+        if (getChainingList() == null || getChainingList().size() ==0)
+            throw new ConfigurationException("The list of chaining cannot be null or empty.");
+        getChainingList().forEach(c->c.check());
     }
 }
