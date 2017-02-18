@@ -19,6 +19,7 @@ public class StoreProcessor extends ProcessorBase {
 
     @Override
     protected IEntity doProcess(IEntity entity) throws Exception {
+        //info("Processing entity %s %s",entity.getType(),entity.getId());
         if (this.store != null) {
             this.store.create(entity);
         }

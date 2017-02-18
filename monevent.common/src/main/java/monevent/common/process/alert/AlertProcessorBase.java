@@ -1,7 +1,6 @@
 package monevent.common.process.alert;
 
 import monevent.common.communication.EntityBusManager;
-import monevent.common.communication.IEntityBus;
 import monevent.common.model.IEntity;
 import monevent.common.model.alert.Alert;
 import monevent.common.model.query.IQuery;

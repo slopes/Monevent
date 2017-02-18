@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by steph on 13/03/2016.
  */
@@ -25,7 +23,7 @@ public class MemoryStoreTest extends ConfigurationTest {
             MemoryStoreConfiguration configurationRead = (MemoryStoreConfiguration) read(file);
             Assert.assertEquals(name, configurationRead.getName());
         } finally {
-            //file.delete();
+            file.delete();
         }
     }
 

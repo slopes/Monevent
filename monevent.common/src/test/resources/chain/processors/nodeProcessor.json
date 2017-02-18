@@ -1,0 +1,10 @@
+{
+  "@class": "monevent.common.process.combine.SequentialProcessorConfiguration",
+  "name": "nodeProcessor",
+  "processors": [
+    "latencyProcessor",
+    "storeProcessor",
+    "chainProcessor"
+  ],
+  "poolSize": 2
+}

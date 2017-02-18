@@ -6,7 +6,6 @@ import monevent.common.managers.ManageableBase;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
-import monevent.common.model.time.Timestamp;
 
 /**
  * Created by Stephane on 21/11/2015.
@@ -25,7 +24,7 @@ public abstract class ProcessorBase extends ManageableBase implements IProcessor
     @AllowConcurrentEvents
     public IEntity process(IEntity entity) throws ProcessorException {
         String entityName = Entity.getEntityName(entity);
-        debug("Processing entity %s ...",entityName);
+
         try {
             if (entity == null) return entity;
             if (this.query != null && !this.query.match(entity)) return entity;

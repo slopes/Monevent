@@ -3,7 +3,6 @@ package monevent.common.process.alert;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.ProcessorConfiguration;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**

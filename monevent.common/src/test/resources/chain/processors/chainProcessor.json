@@ -1,0 +1,365 @@
+{
+  "@class": "monevent.common.process.chain.memory.MemoryChainProcessorConfiguration",
+  "name": "chainProcessor",
+  "store": "chainStore",
+  "chainingList": [
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "root":true,
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeA",
+            "type": "Is"
+          }
+        ]
+      },
+      "subFields": [
+        "idA"
+      ],
+      "subNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeB",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "subNodes",
+            "value": 1,
+            "type": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeB",
+            "type": "Is"
+          }
+        ]
+      },
+      "subFields": [
+        "idB"
+      ],
+      "subNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeC",
+            "type": "Is"
+          },
+          {
+            "field": "superNode",
+            "type": "NotExists"
+          }
+        ]
+      },
+      "superFields": [
+        "idA"
+      ],
+      "superNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeA",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "subNodes",
+            "value": 1,
+            "type": "Count"
+          },
+          {
+            "field": "superNode",
+            "type": "Exists"
+          }
+        ]
+      }
+    },
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeC",
+            "type": "Is"
+          }
+        ]
+      },
+      "subFields": [
+        "idC"
+      ],
+      "subNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeD",
+            "type": "Is"
+          },
+          {
+            "field": "superNode",
+            "type": "NotExists"
+          }
+        ]
+      },
+      "superFields": [
+        "idB"
+      ],
+      "superNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeB",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "subNodes",
+            "value": 1,
+            "type": "Count"
+          },
+          {
+            "field": "superNode",
+            "type": "Exists"
+          }
+        ]
+      }
+    },
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeD",
+            "type": "Is"
+          }
+        ]
+      },
+      "subFields": [
+        "idD"
+      ],
+      "subNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeE",
+            "type": "Is"
+          },
+          {
+            "field": "superNode",
+            "type": "NotExists"
+          }
+        ]
+      },
+      "superFields": [
+        "idC"
+      ],
+      "superNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeC",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "subNodes",
+            "value": 1,
+            "type": "Count"
+          },
+          {
+            "field": "superNode",
+            "type": "Exists"
+          }
+        ]
+      }
+    },
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeE",
+            "type": "Is"
+          }
+        ]
+      },
+      "subFields": [
+        "idE"
+      ],
+      "subNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeF",
+            "type": "Is"
+          },
+          {
+            "field": "superNode",
+            "type": "NotExists"
+          }
+        ]
+      },
+      "superFields": [
+        "idD"
+      ],
+      "superNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeD",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "subNodes",
+            "value": 10,
+            "type": "Count"
+          },
+          {
+            "field": "superNode",
+            "type": "Exists"
+          }
+        ]
+      }
+    },
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeF",
+            "type": "Is"
+          }
+        ]
+      },
+      "subFields": [
+        "idF"
+      ],
+      "subNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeG",
+            "type": "Is"
+          },
+          {
+            "field": "superNode",
+            "type": "NotExists"
+          }
+        ]
+      },
+      "superFields": [
+        "idE"
+      ],
+      "superNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeE",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "subNodes",
+            "value": 10,
+            "type": "Count"
+          },
+          {
+            "field": "superNode",
+            "type": "Exists"
+          }
+        ]
+      }
+    },
+    {
+      "@class": "monevent.common.process.chain.Chaining",
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeG",
+            "type": "Is"
+          }
+        ]
+      },
+      "superFields": [
+        "idF"
+      ],
+      "superNodeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "type",
+            "value": "nodeF",
+            "type": "Is"
+          }
+        ]
+      },
+      "completeQuery": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "superNode",
+            "type": "Exists"
+          }
+        ]
+      }
+    }
+  ],
+  "resultBus": "chainBus"
+}

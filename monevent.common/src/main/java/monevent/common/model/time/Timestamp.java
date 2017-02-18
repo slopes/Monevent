@@ -1,7 +1,6 @@
 package monevent.common.model.time;
 
 import monevent.common.model.Entity;
-import org.joda.time.DateTime;
 
 import java.util.Map;
 

@@ -20,6 +20,6 @@ public interface IMetric extends IManageable , IEntity {
     double getPercentile99();
     double getMean();
     double getStandardDeviation();
-    void add(long value);
+    void add(double value);
     IEntity toEntity();
 }

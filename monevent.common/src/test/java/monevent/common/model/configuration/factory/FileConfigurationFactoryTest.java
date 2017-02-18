@@ -15,18 +15,6 @@ import java.io.File;
  */
 public class FileConfigurationFactoryTest {
 
-//    @Test
-//    public void testBuild() throws Exception {
-//        FileConfigurationFactory factory = new FileConfigurationFactory("src/test/resources/config/");
-//        try {
-//            factory.start();
-//            Configuration configuration = factory.build("ThresholdAlertProcessor");
-//            Assert.assertEquals(ConfigurationType.Processor, configuration.getConfigurationType());
-//        } finally {
-//            factory.stop();
-//        }
-//    }
-
     @Test
     public void testReadWrite() throws Exception {
 
@@ -49,7 +37,7 @@ public class FileConfigurationFactoryTest {
             Assert.assertEquals(queryWrite.getCriteria().get(0).getValue(), queryRead.getCriteria().get(0).getValue());
 
         } finally {
-            //file.delete();
+            file.delete();
         }
     }
 

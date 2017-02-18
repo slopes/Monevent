@@ -10,5 +10,8 @@ public enum QueryCriterionType {
     LesserOrEqualThan,
     GreaterThan,
     GreaterOrEqualThan,
-    NotIs;
+    NotIs,
+    NotExists,
+    Exists,
+    Count;
 }

@@ -27,13 +27,18 @@ public class SequentialProcessor extends ProcessorBase {
 
     @Override
     protected IEntity doProcess(IEntity entity) throws Exception {
-        for (String processorName : this.processors) {
-            IProcessor processor = this.processorManager.load(processorName);
-            if (processor != null) {
-                entity = processor.process(entity);
-            } else {
-                throw new ProcessorException(String.format("The processor %s does not exist", processorName));
+        try {
+            for (String processorName : this.processors) {
+                IProcessor processor = this.processorManager.load(processorName);
+                if (processor != null) {
+                    entity = processor.process(entity);
+                } else {
+                    throw new ProcessorException(String.format("The processor %s does not exist", processorName));
+                }
             }
+
+        } catch (Exception error) {
+            error("Aborting sequence", error);
         }
         return entity;
     }

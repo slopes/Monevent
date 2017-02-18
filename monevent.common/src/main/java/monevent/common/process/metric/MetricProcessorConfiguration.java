@@ -5,7 +5,6 @@ import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
 import monevent.common.process.ProcessorManager;
-import monevent.common.process.time.ScheduledProcessorConfiguration;
 import monevent.common.store.StoreManager;
 
 /**

@@ -8,6 +8,7 @@ import monevent.common.managers.ManagerBase;
 public class ProcessorManager extends ManagerBase<IProcessor> {
     private final IProcessorFactory processorFactory;
 
+
     public ProcessorManager(String name,IProcessorFactory processorFactory) {
         super(name);
         this.processorFactory = processorFactory;

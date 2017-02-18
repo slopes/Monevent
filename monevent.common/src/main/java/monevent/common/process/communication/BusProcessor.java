@@ -31,12 +31,12 @@ public class BusProcessor extends ProcessorBase {
     @Override
     protected IEntity doProcess(IEntity entity) throws Exception {
         if (this.publications != null && this.processorManager != null) {
-            this.publications.stream().forEach(p -> {
-                IProcessor processor = this.processorManager.load(p);
+            for (String publication : publications) {
+                IProcessor processor = this.processorManager.load(publication);
                 if (processor != null) {
                     processor.process(entity);
                 }
-            });
+            }
         }
         return entity;
     }

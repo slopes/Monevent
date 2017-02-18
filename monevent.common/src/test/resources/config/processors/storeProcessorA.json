@@ -3,6 +3,7 @@
   "id": null,
   "name": "storeProcessor",
   "query": {
+    "@class": "monevent.common.model.query.Query",
     "sortOrder": null,
     "sortField": null,
     "name": null,

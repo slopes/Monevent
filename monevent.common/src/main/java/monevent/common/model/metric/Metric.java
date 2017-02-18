@@ -168,7 +168,7 @@ public class Metric extends Entity implements IMetric {
     }
 
     @Override
-    public void add(long value) {
+    public void add(double value) {
         setMean((getMean() * getCount() + value) / (getCount() + 1));
         setCount(getCount() + 1);
         setMinimum(Math.min(getMinimum(), value));

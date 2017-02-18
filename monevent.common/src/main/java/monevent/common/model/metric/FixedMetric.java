@@ -1,21 +1,20 @@
 package monevent.common.model.metric;
 
 import com.eaio.uuid.UUID;
-import com.google.common.collect.ImmutableMap;
 import monevent.common.managers.ManageableBase;
 import monevent.common.model.IEntity;
-import monevent.common.tools.ComparableMap;
+import monevent.common.tools.SafeMap;
 import org.HdrHistogram.ConcurrentHistogram;
 import org.HdrHistogram.Histogram;
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Created by steph on 19/03/2016.
- */
+
 public class FixedMetric extends ManageableBase implements IMetric {
 
     private String id;
@@ -23,14 +22,14 @@ public class FixedMetric extends ManageableBase implements IMetric {
     private DateTime start;
     private DateTime stop;
     private AtomicLong last;
-    private ComparableMap criteria;
+    private SafeMap criteria;
 
     public FixedMetric(String name, long highestTrackableValue,
                        int numberOfSignificantValueDigits) {
         super(name);
         this.data = new ConcurrentHistogram(highestTrackableValue, numberOfSignificantValueDigits);
         this.last = new AtomicLong();
-        this.criteria = new ComparableMap();
+        this.criteria = new SafeMap();
         this.start = DateTime.now();
     }
 
@@ -105,9 +104,9 @@ public class FixedMetric extends ManageableBase implements IMetric {
     }
 
     @Override
-    public void add(long value) {
-        this.last.set(value);
-        this.data.recordValue(value);
+    public void add(double value) {
+        this.last.set((long) value);
+        this.data.recordValue((long) value);
     }
 
     @Override
@@ -162,7 +161,12 @@ public class FixedMetric extends ManageableBase implements IMetric {
     }
 
     @Override
-    public Comparable getValue(String key) {
+    public void setValue(String key, Object value) {
+        throw new NotImplementedException("The method setValue is not authorized on metrics");
+    }
+
+    @Override
+    public Object getValue(String key) {
         return this.criteria.getValue(key);
     }
 
@@ -207,6 +211,11 @@ public class FixedMetric extends ManageableBase implements IMetric {
     }
 
     @Override
+    public <T> List<T> getValueAsList(String key) {
+        return this.criteria.getValueAsList(key);
+    }
+
+    @Override
     public <T extends Enum<T>> T getValueAsEnum(String field, Class<T> enumType, T defaultValue) {
         return this.criteria.getValueAsEnum(field,enumType,defaultValue);
     }
@@ -216,9 +225,5 @@ public class FixedMetric extends ManageableBase implements IMetric {
         return (IEntity) super.clone();
     }
 
-    @Override
-    public int compareTo(Object o) {
-        //TODO : add comparison field
-        return this.criteria.compareTo(o);
-    }
+
 }

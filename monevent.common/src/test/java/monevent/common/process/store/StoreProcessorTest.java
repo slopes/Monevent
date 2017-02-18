@@ -8,7 +8,8 @@ import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
 import monevent.common.process.ProcessorTest;
 import monevent.common.store.memory.MemoryStore;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.List;

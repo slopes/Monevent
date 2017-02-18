@@ -1,7 +1,6 @@
 package monevent.common.communication;
 
 import monevent.common.model.configuration.Configuration;
-import monevent.common.model.query.IQuery;
 
 /**
  * Created by steph on 20/03/2016.

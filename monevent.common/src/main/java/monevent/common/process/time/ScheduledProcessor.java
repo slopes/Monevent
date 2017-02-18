@@ -1,6 +1,5 @@
 package monevent.common.process.time;
 
-import monevent.common.communication.EntityBusManager;
 import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;

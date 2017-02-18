@@ -36,12 +36,17 @@ public class Query implements IQuery {
         setCriteria(new ArrayList<>());
     }
 
-    public Query(Query query) {
-        setId(query.getId());
-        setName(query.getName());
-        setSortField(query.getSortField());
-        setSortOrder(query.getSortOrder());
-        setCriteria(query.getCriteria());
+    public Query(IQuery query) {
+        if (query != null) {
+            setId(query.getId());
+            setName(query.getName());
+            setSortField(query.getSortField());
+            setSortOrder(query.getSortOrder());
+            setCriteria(query.getCriteria());
+        } else {
+            setId(new UUID().toString());
+            setCriteria(new ArrayList<>());
+        }
     }
 
     @Override
@@ -99,8 +104,30 @@ public class Query implements IQuery {
         return this;
     }
 
-    public Query addCriterion(String field, Comparable value, QueryCriterionType type) {
-        return addCriterion(new QueryCriterion(field, value, type));
+    public Query addCriterion(String field, Object value, QueryCriterionType type) {
+
+        switch(type) {
+            case Is:
+                return addCriterion(new QueryCriterionIs(field,value));
+            case LesserThan:
+                return addCriterion(new QueryCriterionLesserThan(field, value));
+            case LesserOrEqualThan:
+                return addCriterion(new QueryCriterionLesserOrEqualThan(field, value));
+            case GreaterThan:
+                return addCriterion(new QueryCriterionGreaterThan(field, value));
+            case GreaterOrEqualThan:
+                return addCriterion(new QueryCriterionGreaterOrEqualThan(field, value));
+            case NotIs:
+                return addCriterion(new QueryCriterionNotIs(field, value));
+            case NotExists:
+                return addCriterion(new QueryCriterionNotExists(field));
+            case Exists:
+                return addCriterion(new QueryCriterionExists(field));
+            case Count:
+                return addCriterion(new QueryCriterionCount(field, value));
+        }
+
+        return this;
     }
 
 
@@ -118,13 +145,12 @@ public class Query implements IQuery {
     }
 
 
-
-    public static IQuery AND(IQuery leftQuery,IQuery rightQuery) {
-        return new AndQueryOperator(leftQuery,rightQuery);
+    public static IQuery AND(IQuery leftQuery, IQuery rightQuery) {
+        return new AndQueryOperator(leftQuery, rightQuery);
     }
 
-    public static IQuery OR(IQuery leftQuery,IQuery rightQuery) {
-        return new OrQueryOperator(leftQuery,rightQuery);
+    public static IQuery OR(IQuery leftQuery, IQuery rightQuery) {
+        return new OrQueryOperator(leftQuery, rightQuery);
     }
 
     public static IQuery NOT(IQuery query) {
@@ -157,12 +183,11 @@ public class Query implements IQuery {
 
         public Deserializer addCriteria(List<Map> criteria) {
             if (criteria != null) {
-                criteria.stream().forEach( c-> {
+                criteria.stream().forEach(c -> {
                     String field = c.get("field").toString();
                     Comparable value = (Comparable) c.get("value");
                     QueryCriterionType type = OptionalObject.enumValue(c.get("type"), QueryCriterionType.class, QueryCriterionType.None);
-                    QueryCriterion criterion=  new QueryCriterion(field,value,type);
-                    query.addCriterion(criterion);
+                    query.addCriterion(field, value, type);
                 });
             }
             return this;

@@ -5,8 +5,6 @@ import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
 import monevent.common.process.ProcessorManager;
-import monevent.common.process.combine.SequentialProcessor;
-import monevent.common.store.IStore;
 import monevent.common.store.StoreManager;
 
 import java.util.List;

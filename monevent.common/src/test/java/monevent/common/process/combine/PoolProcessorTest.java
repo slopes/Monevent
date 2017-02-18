@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 /**
  * Created by slopes on 15/01/17.

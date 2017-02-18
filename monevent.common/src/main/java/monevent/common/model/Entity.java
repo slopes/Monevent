@@ -2,18 +2,15 @@ package monevent.common.model;
 
 import com.eaio.uuid.UUID;
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
-import monevent.common.tools.ComparableMap;
-import monevent.common.tools.ComparableMapOrdering;
+import monevent.common.tools.SafeMap;
 import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.Map;
 
 
-public class Entity extends ComparableMap implements IEntity {
+public class Entity extends SafeMap implements IEntity {
 
     public static String id = "id";
     public static String type = "type";
@@ -46,7 +43,7 @@ public class Entity extends ComparableMap implements IEntity {
         }
     }
 
-    public IEntity set(String key, Comparable value) {
+    public Entity set(String key, Comparable value) {
         setValue(key, value);
         return this;
     }
@@ -108,8 +105,6 @@ public class Entity extends ComparableMap implements IEntity {
         }
         return this;
     }
-
-    public static Ordering<ComparableMap> orderByTimestamp = new ComparableMapOrdering(Entity.timestamp);
 
     public static <T extends IEntity> List<IEntity> toList(List<T> items) {
         return Lists.transform(items, new Function<T, IEntity>() {

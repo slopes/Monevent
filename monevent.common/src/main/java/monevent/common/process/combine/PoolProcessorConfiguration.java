@@ -7,8 +7,6 @@ import monevent.common.process.ProcessorConfiguration;
 import monevent.common.process.ProcessorManager;
 import monevent.common.store.StoreManager;
 
-import java.util.List;
-
 /**
  * Created by slopes on 15/01/17.
  */

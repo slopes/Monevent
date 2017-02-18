@@ -1,0 +1,6 @@
+{
+  "@class": "monevent.common.process.communication.BusProcessorConfiguration",
+  "name": "chainBusProcessor",
+  "publications": ["storeProcessor"],
+  "subscriptions": ["chainBus"]
+}

@@ -6,12 +6,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by steph on 13/03/2016.

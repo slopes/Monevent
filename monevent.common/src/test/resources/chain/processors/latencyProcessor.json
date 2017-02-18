@@ -1,0 +1,7 @@
+{
+  "@class": "monevent.common.process.command.CommandProcessorConfiguration",
+  "name": "latencyProcessor",
+  "commands": [
+    "DATE SUBSTRACT stop start latency"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "@class": "monevent.common.process.store.StoreProcessorConfiguration",
+  "name": "storeProcessor",
+  "storeName": "store"
+}
