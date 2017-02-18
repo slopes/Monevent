@@ -4,16 +4,15 @@ import monevent.common.model.Entity;
 
 import java.util.Map;
 
-/**
- * Created by Stephane on 25/12/2015.
- */
+
 public class Fault extends Entity {
 
-    protected static String message = "message";
-    protected static String stackTrace = "stackTrace";
-    protected static String component = "component";
-    protected static String host = "host";
+    private static String message = "message";
+    private static String stackTrace = "stackTrace";
+    private static String component = "component";
+    private static String host = "host";
     public Fault() {
+        super("fault");
     }
 
     public Fault(Map data) {

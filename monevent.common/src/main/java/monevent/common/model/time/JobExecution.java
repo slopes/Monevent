@@ -5,14 +5,13 @@ import org.joda.time.DateTime;
 
 import java.util.Map;
 
-/**
- * Created by steph on 06/03/2016.
- */
+
 public class JobExecution extends Timestamp {
 
     public static String fireId = "fireId";
     public static String fireTime = "fireTime";
     public static String status = "status";
+    public static String message = "message";
     public static String processor = "processor";
 
     public JobExecution() {
@@ -62,5 +61,14 @@ public class JobExecution extends Timestamp {
     public void setStatus(String status) {
         setValue(JobExecution.status, status);
     }
+
+    public String getMessage() {
+        return getValueAsString(JobExecution.message);
+    }
+
+    public void setMessage(String message) {
+        setValue(JobExecution.message, message);
+    }
+
 
 }

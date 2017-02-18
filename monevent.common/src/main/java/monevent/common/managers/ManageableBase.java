@@ -36,10 +36,6 @@ public abstract class ManageableBase implements IManageable {
 
     private static IEntityBus entityBus;
 
-    public synchronized static void setEventIPublisher(IEntityBus IEntityBus) {
-        ManageableBase.entityBus = IEntityBus;
-    }
-
     public static void log(IEntity entity) {
         if (entityBus != null && entity != null) {
             ManageableBase.entityBus.publish(entity);

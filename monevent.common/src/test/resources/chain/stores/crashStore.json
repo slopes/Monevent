@@ -1,0 +1,4 @@
+{
+  "@class": "monevent.common.store.CrashingStoreConfiguration",
+  "name": "crashStore"
+}

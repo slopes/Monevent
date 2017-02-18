@@ -46,7 +46,7 @@ public class ScheduledProcessorConfiguration extends ProcessorConfiguration {
 
     @Override
     protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new ScheduledProcessor(getName(),getQuery(),getCronExpression(),getProcessors(),processorManager);
+        return new ScheduledProcessor(getName(),getQuery(),getCronExpression(),getProcessors(),processorManager, entityBusManager);
     }
 
 }

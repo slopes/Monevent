@@ -1,6 +1,7 @@
 package monevent.common.process.store;
 
 import monevent.common.communication.EntityBusManager;
+import monevent.common.model.query.IQuery;
 import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
@@ -14,6 +15,7 @@ import monevent.common.store.StoreManager;
 public class StoreProcessorConfiguration extends ProcessorConfiguration {
 
     private String storeName;
+    private IQuery storeQuery;
 
     public StoreProcessorConfiguration() {
         super();

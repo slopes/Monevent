@@ -1,11 +1,15 @@
 package monevent.common.process.time;
 
+import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.ManageableBase;
 import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
+import monevent.common.model.time.JobExecution;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorBase;
 import monevent.common.process.ProcessorManager;
 import org.quartz.*;
+import org.quartz.core.jmx.JobExecutionContextSupport;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
@@ -18,14 +22,16 @@ public class ScheduledProcessor extends ProcessorBase {
 
     private final String cronExpression;
     private final List<String> processors;
+    private final EntityBusManager entityBusManager;
     private final ProcessorManager processorManager;
     private Scheduler scheduler;
 
-    public ScheduledProcessor(String name, IQuery query, String cronExpression, List<String> processors, ProcessorManager processorManager) {
+    public ScheduledProcessor(String name, IQuery query, String cronExpression, List<String> processors, ProcessorManager processorManager, EntityBusManager entityBusManager) {
         super(name, query);
         this.cronExpression = cronExpression;
         this.processors = processors;
         this.processorManager = processorManager;
+        this.entityBusManager = entityBusManager;
     }
 
     @Override
@@ -37,6 +43,7 @@ public class ScheduledProcessor extends ProcessorBase {
                 //Create the jod to be executed
                 JobDetail job = JobBuilder.newJob(ScheduledProcessorJob.class).withIdentity(jobKey).build();
                 job.getJobDataMap().put("processor", this);
+                job.getJobDataMap().put("entityBusManager", this.entityBusManager);
 
                 Trigger trigger = TriggerBuilder
                         .newTrigger()
@@ -87,14 +94,27 @@ public class ScheduledProcessor extends ProcessorBase {
             return null;
         }
 
-        this.processors.forEach(p -> {
-            IProcessor processor = this.processorManager.load(p);
+        for (String processorName : this.processors) {
+            IProcessor processor = this.processorManager.load(processorName);
             if (processor != null) {
-                processor.process(entity);
+                JobExecution execution = (JobExecution) entity.clone();
+                try {
+                    execution.setProcessor(processorName);
+                    IEntity result =  processor.process(execution);
+                    execution.setStatus("OK");
+                } catch (Exception error) {
+                    warn("Cannot trigger job %s", error, processor.getName());
+                    execution.setStatus("KO");
+                    execution.setMessage(error.getMessage());
+                } finally {
+                    info("Job %s done",processor.getName());
+                }
+                publish(entityBusManager,"jobBus",execution);
             } else {
-                warn("Cannot load processor %s", p);
+                warn("Cannot load processor %s", processorName);
             }
-        });
+        }
+
         return null;
     }
 }

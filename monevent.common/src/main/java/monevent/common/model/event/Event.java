@@ -7,9 +7,6 @@ import java.util.Map;
 
 public class Event extends Entity {
 
-    protected static String index = "index";
-    protected static String workflow = "workflow";
-    protected static String activity = "activity";
     protected static String component = "component";
     protected static String host = "host";
     protected static String process = "process";
@@ -31,23 +28,6 @@ public class Event extends Entity {
         super(name, type);
     }
 
-    /* Workflow */
-    public String getWorkflow() {
-        return getValueAsString(Event.workflow);
-    }
-
-    public void setWorkflow(String workflow) {
-        setValue(Event.workflow, workflow);
-    }
-
-    /* Activity */
-    public String getActivity() {
-        return getValueAsString(Event.activity);
-    }
-
-    public void setActivity(String activity) {
-        setValue(Event.activity, activity);
-    }
 
     /* Host */
     public String getHost() {
@@ -85,13 +65,6 @@ public class Event extends Entity {
         setValue(Event.component, component);
     }
 
-    /* Index */
-    public String getIndex() {
-        return getValueAsString(Event.index);
-    }
 
-    public void setIndex(String index) {
-        setValue(Event.index, index);
-    }
 
 }

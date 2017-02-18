@@ -2,27 +2,26 @@ package monevent.common.model.alert;
 
 import org.joda.time.DateTime;
 
-/**
- * Created by Stephane on 26/12/2015.
- */
+import java.util.List;
+
+
 public class FirstAlertStrategy extends AlertStrategyBase {
-    protected FirstAlertStrategy(String name) {
-        super(name);
+    public FirstAlertStrategy() {
+        super("FirstAlertStrategy");
     }
 
-    @Override
-    protected Alert doAnalyze(Alert alert) {
-        if (alert == null) return getAlert();
-        if (alert.getTimestamp().isBefore(getAlert().getTimestamp())) {
-            setAlert(new Alert(alert));
-        }
-        return getAlert();
-    }
 
     @Override
-    protected Alert buildAlert() {
+    protected Alert doAnalyze(List<Alert> alerts) {
+        if (alerts == null) return null;
         Alert alert = new Alert();
-        alert.setTimestamp(new DateTime(Long.MAX_VALUE));
+        alert.setTimestamp(DateTime.now().plusYears(100));
+        for (Alert alertToAnalyze : alerts) {
+            if ( alertToAnalyze == null) continue;
+            if (alertToAnalyze.getTimestamp().isBefore(alert.getTimestamp())) {
+                alert = alertToAnalyze;
+            }
+        }
         return alert;
     }
 

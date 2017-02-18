@@ -3,11 +3,13 @@ package monevent.common.model.alert;
 import monevent.common.managers.ManageableBase;
 import monevent.common.process.ProcessorException;
 
+import java.util.List;
+
 /**
  * Created by Stephane on 26/12/2015.
  */
-public abstract class AlertStrategyBase extends ManageableBase implements IAlertStrategy{
-    private Alert alert;
+public abstract class AlertStrategyBase extends ManageableBase implements IAlertStrategy {
+
 
     protected AlertStrategyBase(String name) {
         super(name);
@@ -15,39 +17,28 @@ public abstract class AlertStrategyBase extends ManageableBase implements IAlert
     }
 
     @Override
-    public Alert analyze(Alert alert) {
-        debug("Processing %d alert...", alert.getName());
+    public Alert analyze(List<Alert> alerts) {
+        debug("Start alert processing");
         try {
-            return doAnalyze(alert);
+            return doAnalyze(alerts);
         } catch (Exception error) {
-            error("Cannot process %d alert.", error,  alert.getName());
-            throw new ProcessorException(trace("Cannot process %d alert.",  alert.getName()), error);
+            throw new ProcessorException("Cannot process alerts.", error);
         } finally {
-            debug("... %d alert processed", alert.getName());
+            debug("... alert processing stopped.");
         }
     }
 
-    protected abstract Alert doAnalyze(Alert alert);
+    protected abstract Alert doAnalyze(List<Alert> alerts);
 
-    @Override
-    public Alert getAlert() {
-        return alert;
-    }
-
-    protected void setAlert(Alert alert) {
-        this.alert = alert;
-    }
 
     @Override
     protected void doStart() {
-        alert = buildAlert();
-    }
 
-    protected abstract Alert buildAlert();
+    }
 
     @Override
     protected void doStop() {
-        ManageableBase.log(alert);
+
     }
 
 

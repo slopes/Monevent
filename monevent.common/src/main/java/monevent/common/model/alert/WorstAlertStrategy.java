@@ -1,26 +1,24 @@
 package monevent.common.model.alert;
 
-/**
- * Created by Stephane on 26/12/2015.
- */
+import java.util.List;
+
+
 public class WorstAlertStrategy extends AlertStrategyBase {
-    protected WorstAlertStrategy(String name) {
-        super(name);
+    public WorstAlertStrategy() {
+        super("WorstAlertStrategy");
     }
 
     @Override
-    protected Alert doAnalyze(Alert alert) {
-        if (alert == null) return getAlert();
-        if (alert.getPriority().getValue() > getAlert().getPriority().getValue()) {
-            setAlert(new Alert(alert));
-        }
-        return getAlert();
-    }
-
-    @Override
-    protected Alert buildAlert() {
+    protected Alert doAnalyze(List<Alert> alerts) {
+        if (alerts == null) return null;
         Alert alert = new Alert();
         alert.setPriority(AlertPriority.Undefined);
+        for (Alert alertToAnalyze : alerts) {
+            if ( alertToAnalyze == null) continue;
+            if (alertToAnalyze.getPriority().getValue() >= alert.getPriority().getValue()) {
+                alert = alertToAnalyze;
+            }
+        }
         return alert;
     }
 

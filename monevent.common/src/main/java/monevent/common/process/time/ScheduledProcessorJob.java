@@ -33,7 +33,7 @@ public class ScheduledProcessorJob implements Job {
             try {
                 IEntity result = processor.process(jobExecution);
             } catch (Exception error) {
-                ManageableBase.error(logger,"Cannot trigger job %s", error, processor.getName());
+                ManageableBase.warn(logger,"Cannot trigger job %s", error, processor.getName());
             } finally {
                 ManageableBase.info(logger,"Job %s done",processor.getName());
             }

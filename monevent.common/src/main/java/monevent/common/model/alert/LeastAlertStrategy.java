@@ -1,26 +1,26 @@
 package monevent.common.model.alert;
 
-/**
- * Created by Stephane on 26/12/2015.
- */
+import org.joda.time.DateTime;
+
+import java.util.List;
+
+
 public class LeastAlertStrategy extends AlertStrategyBase {
-    protected LeastAlertStrategy(String name) {
-        super(name);
+    public LeastAlertStrategy() {
+        super("LeastAlertStrategy");
     }
 
     @Override
-    protected Alert doAnalyze(Alert alert) {
-        if (alert == null) return getAlert();
-        if (getAlert().getPriority() == AlertPriority.Undefined || alert.getPriority().getValue() < getAlert().getPriority().getValue()) {
-            setAlert(new Alert(alert));
-        }
-        return getAlert();
-    }
-
-    @Override
-    protected Alert buildAlert() {
+    protected Alert doAnalyze(List<Alert> alerts) {
+        if (alerts == null) return null;
         Alert alert = new Alert();
-        alert.setPriority(AlertPriority.Undefined);
+        alert.setPriority(AlertPriority.Fatal);
+        for (Alert alertToAnalyze : alerts) {
+            if ( alertToAnalyze == null) continue;
+            if (alertToAnalyze.getPriority().getValue() <= alert.getPriority().getValue()) {
+                alert = alertToAnalyze;
+            }
+        }
         return alert;
     }
 
