@@ -1,5 +1,6 @@
 package monevent.server.services;
 
+import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.setup.Environment;
 import monevent.common.managers.ManageableBase;
 
@@ -19,7 +20,7 @@ public abstract class ServiceBase extends ManageableBase implements IService {
     protected void doStart() {
         if (environment != null) {
             environment.jersey().register(this);
-            environment.healthChecks().register(getName(), getHealthCheck());
+            environment.healthChecks().register(getName(), new ServiceHealthCheck(this));
         } else {
             warn("Environement is not set. This is allowed only for testing.");
         }
@@ -27,8 +28,9 @@ public abstract class ServiceBase extends ManageableBase implements IService {
 
     @Override
     protected void doStop() {
-
     }
+
+
 
 
 }

@@ -4,6 +4,7 @@ package monevent.common.model.metric;
 import monevent.common.managers.ManageableException;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
+import monevent.common.model.event.Event;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 
 public class Metric extends Entity implements IMetric {
 
+    public static String name = "name";
     public static String count = "count";
     public static String maximum = "maximum";
     public static String minimum = "minimum";
@@ -32,6 +34,7 @@ public class Metric extends Entity implements IMetric {
 
     public Metric(String name) {
         super("metric");
+        setName(name);
         reset();
     }
 
@@ -40,7 +43,8 @@ public class Metric extends Entity implements IMetric {
     }
 
     public Metric(String name, Entity entity, String... fieldsToCopy) {
-        super(name, "metric", entity);
+        super("metric", entity);
+        setName(name);
     }
 
     @Override
@@ -156,6 +160,15 @@ public class Metric extends Entity implements IMetric {
 
     public void setMean(double mean) {
         setValue(Metric.mean, mean);
+    }
+
+
+    public String getName() {
+        return getValueAsString(Metric.name);
+    }
+
+    public void setName(String name) {
+        setValue(Metric.name, name);
     }
 
     @Override

@@ -3,8 +3,9 @@ package monevent.common.process.chain.memory;
 import com.eaio.uuid.UUID;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
+import monevent.common.model.query.AndQueryOperator;
 import monevent.common.model.query.IQuery;
 import monevent.common.model.query.Query;
 import monevent.common.model.query.QueryCriterionType;
@@ -14,7 +15,6 @@ import monevent.common.process.chain.IChainingChecker;
 import monevent.common.process.chain.QueryChainingChecker;
 import monevent.common.store.IStore;
 import monevent.common.store.StoreException;
-import monevent.common.store.StoreManager;
 
 import java.util.List;
 import java.util.Map;
@@ -32,10 +32,10 @@ public class MemoryChainProcessor extends ChainProcessorBase {
     private final IStore store;
     private final Map<Chaining, IChainingChecker> checkers;
 
-    public MemoryChainProcessor(String name, IQuery query, List<Chaining> chainingList, EntityBusManager entityBusManager, String resultBus, StoreManager storeManager, String store) {
-        super(name, query, chainingList, entityBusManager, resultBus);
-        if (!Strings.isNullOrEmpty(store) && storeManager != null) {
-            this.store = storeManager.load(store);
+    public MemoryChainProcessor(String name, IQuery query, List<Chaining> chainingList, Manager manager, String resultBus, String store) {
+        super(name, query, chainingList, manager, resultBus);
+        if (!Strings.isNullOrEmpty(store) && manager != null) {
+            this.store = manager.get(store);
         } else {
             this.store = null;
         }
@@ -88,9 +88,12 @@ public class MemoryChainProcessor extends ChainProcessorBase {
             }
 
 
-            Query query = new Query(chaining.getSubNodeQuery());
+            final Query query = new Query();
             subFields.forEach(f -> query.addCriterion(f, entity.getValue(f), QueryCriterionType.Is));
-            List<IEntity> unKnownSubNodes = this.store.read(query);
+
+            final IQuery subQuery = new AndQueryOperator(query,chaining.getSubNodeQuery());
+
+            List<IEntity> unKnownSubNodes = this.store.read(subQuery);
             if (unKnownSubNodes != null && unKnownSubNodes.size() > 0) {
                 debug("Found %s sub nodes", unKnownSubNodes.size());
                 for (IEntity subNode : unKnownSubNodes) {
@@ -107,10 +110,12 @@ public class MemoryChainProcessor extends ChainProcessorBase {
         if (!chaining.isRoot() && entity.getValue(MemoryChainProcessor.superNode) == null) {
             List<String> superFields = chaining.getSuperFields();
             if (superFields != null && superFields.size() > 0) {
-                Query query = new Query(chaining.getSuperNodeQuery());
+                final Query query = new Query();
                 superFields.forEach(f -> query.addCriterion(f, entity.getValue(f), QueryCriterionType.Is));
 
-                List<IEntity> knownSuperNodes = this.store.read(query);
+                final IQuery superQuery = new AndQueryOperator(query,chaining.getSuperNodeQuery());
+
+                List<IEntity> knownSuperNodes = this.store.read(superQuery);
                 if (knownSuperNodes != null && knownSuperNodes.size() == 1) {
                     debug("Found %s super nodes", knownSuperNodes.size());
                     final IEntity superNode = knownSuperNodes.get(0);

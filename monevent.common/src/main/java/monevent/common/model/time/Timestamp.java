@@ -13,25 +13,12 @@ public class Timestamp extends Entity {
         super("timestamp");
     }
 
-    public Timestamp(String name) {
-        super("timestamp");
-        setName(name);
-    }
-
-    protected Timestamp(String name, String type) {
-        super(name,type);
-    }
-
     public Timestamp(Map data) {
         super(data);
     }
 
-    public Timestamp(String name , Entity entity, String... fieldsToCopy) {
-        super(name,"timestamp",entity);
+    public Timestamp(Entity entity, String... fieldsToCopy) {
+        super("timestamp",entity,fieldsToCopy);
     }
-
-    protected Timestamp(String name ,String type, Entity entity, String... fieldsToCopy) {
-        super(name,type,entity);
-    }
-
+    
 }

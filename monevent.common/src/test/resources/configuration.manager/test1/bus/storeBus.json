@@ -1,0 +1,4 @@
+{
+  "@class": "monevent.common.communication.EntityBusConfiguration",
+  "name": "storeBus"
+}

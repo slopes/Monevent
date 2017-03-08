@@ -44,7 +44,7 @@ public class StoreExceptionTest {
             assertTrue(error.getMessage().contains("Cannot process entity"));
             assertNotNull(error.getCause());
             assertTrue(error.getCause() instanceof  StoreException);
-            assertEquals("Cannot create entity",error.getCause().getMessage());
+            assertEquals("Cannot create entity",error.getCause().getCause().getMessage());
         }
         finally {
             processor.stop();
@@ -69,7 +69,7 @@ public class StoreExceptionTest {
             assertTrue(error.getMessage().contains("Cannot process entity"));
             assertNotNull(error.getCause());
             assertTrue(error.getCause() instanceof  StoreException);
-            assertEquals("java.lang.Exception: Cannot update entity",error.getCause().getMessage());
+            assertEquals("java.lang.Exception: Cannot update entity",error.getCause().getCause().getMessage());
         }
         finally {
             processor.stop();

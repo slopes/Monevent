@@ -1,13 +1,10 @@
 package monevent.common.process.communication;
 
-import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
-import monevent.common.process.ProcessorManager;
-import monevent.common.store.StoreManager;
 
 import java.util.List;
 
@@ -45,8 +42,8 @@ public class BusProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
-    protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new BusProcessor(getName(), getQuery(), entityBusManager, getSubscriptions(), processorManager, getPublications());
+    protected IProcessor doBuild(Manager manager) {
+        return new BusProcessor(getName(), getQuery(), manager, getSubscriptions(), getPublications());
     }
 
     public void check() throws ConfigurationException {

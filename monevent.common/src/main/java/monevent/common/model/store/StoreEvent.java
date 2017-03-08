@@ -26,11 +26,6 @@ public class StoreEvent extends Entity {
         super(other);
     }
 
-    public StoreEvent(String name) {
-        super(name, "storeEvent");
-        setAction(StoreAction.CREATE);
-    }
-
 
     public StoreAction getAction() {
         return getValueAsEnum(StoreEvent.action,StoreAction.class,StoreAction.CREATE);

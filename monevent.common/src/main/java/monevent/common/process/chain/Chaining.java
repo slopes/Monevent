@@ -2,6 +2,8 @@ package monevent.common.process.chain;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import monevent.common.managers.IManageable;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.Configuration;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
@@ -26,6 +28,7 @@ public class Chaining extends Configuration {
         this.subFields = Lists.newArrayList();
         this.superFields = Lists.newArrayList();
         this.commands = Lists.newArrayList();
+        setCategory("chaining");
     }
 
     public Chaining(String name, IQuery query, boolean isRoot, List<String> subFields,IQuery subNodeQuery,  List<String> superFields,IQuery superNodeQuery, IQuery completeQuery, List<String> commands) {
@@ -38,6 +41,7 @@ public class Chaining extends Configuration {
         this.superNodeQuery = superNodeQuery;
         this.completeQuery = completeQuery;
         this.commands = commands;
+        setCategory("chaining");
     }
 
     public boolean isRoot() {
@@ -115,5 +119,10 @@ public class Chaining extends Configuration {
         if (getCompleteQuery() == null )
             throw new ConfigurationException("The complete query cannot be null.");
 
+    }
+
+    @Override
+    public IManageable build(Manager manager) {
+        return null;
     }
 }

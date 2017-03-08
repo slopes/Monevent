@@ -1,7 +1,7 @@
 package monevent.common.process.matching;
 
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.command.Command;
 import monevent.common.model.command.CommandParser;
@@ -19,16 +19,16 @@ import java.util.concurrent.ExecutionException;
 public abstract class MatchingProcessorBase extends ProcessorBase {
 
 
-    private final EntityBusManager entityBusManager;
+    private final Manager manager;
     private final String resultBus;
     private final List<Matching> matchingList;
     private final Map<Matching, List<Command>> commands;
 
 
-    public MatchingProcessorBase(String name, IQuery query, List<Matching> matchingList, EntityBusManager entityBusManager, String resultBus) {
+    public MatchingProcessorBase(String name, IQuery query, List<Matching> matchingList, Manager manager, String resultBus) {
         super(name, query);
         this.resultBus = resultBus;
-        this.entityBusManager = entityBusManager;
+        this.manager = manager;
         this.matchingList = matchingList;
         this.commands = new ConcurrentHashMap<>();
         if (matchingList != null) {
@@ -53,7 +53,7 @@ public abstract class MatchingProcessorBase extends ProcessorBase {
 
                 if (doCheck(matching, result)) {
                     //info("Publishing result %s %s",result.getType(),result.getId());
-                    publish(entityBusManager, this.resultBus, result);
+                    publish(manager, this.resultBus, result);
                 }
             }
         }

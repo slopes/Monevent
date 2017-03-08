@@ -3,23 +3,23 @@ package monevent.common.process.chain.memory;
 
 import com.eaio.uuid.UUID;
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
-import monevent.common.managers.ManageableBase;
+import monevent.common.communication.EntityBusConfiguration;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
-import monevent.common.model.configuration.factory.FileConfigurationFactory;
+import monevent.common.model.configuration.factory.file.FileConfigurationFactory;
 import monevent.common.model.event.Event;
 import monevent.common.model.query.IQuery;
 import monevent.common.model.query.Query;
 import monevent.common.model.query.QueryCriterionType;
-import monevent.common.process.*;
+import monevent.common.process.IProcessor;
+import monevent.common.process.ProcessorConfiguration;
+import monevent.common.process.ProcessorTest;
 import monevent.common.process.chain.Chaining;
-import monevent.common.process.command.CommandProcessorConfiguration;
-import monevent.common.process.matching.memory.MemoryMatchingProcessorConfiguration;
 import monevent.common.store.IStore;
+import monevent.common.store.StoreConfiguration;
 import monevent.common.store.StoreException;
-import monevent.common.store.StoreFactory;
-import monevent.common.store.StoreManager;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -32,26 +32,33 @@ import static org.junit.Assert.*;
  */
 public class MemoryChainProcessorTest extends ProcessorTest {
 
-
-
-
-
-    private Event getEvent(String type) {
-        Event event = new Event(type);
-        return event;
+    @Before
+    public void setUpClass() {
+        start();
     }
 
+    @After
+    public void tearDownClass() {
+        stop();
+    }
+
+    @Override
+    protected void addConfiguration() {
+        this.factory.addFactory( new FileConfigurationFactory<EntityBusConfiguration>("entityBusConfigurationFileFactory", "src/test/resources/chain/"));
+        this.factory.addFactory( new FileConfigurationFactory<StoreConfiguration>("storeConfigurationFileFactory", "src/test/resources/chain/"));
+        this.factory.addFactory( new FileConfigurationFactory<ProcessorConfiguration>("processorConfigurationFileFactory", "src/test/resources/chain/"));
+    }
 
     @Test
     public void testConfiguration() {
         String name = "chainProcessor";
 
-        IQuery query = new Query().addCriterion(Entity.type,"nodeB",QueryCriterionType.Is);
+        IQuery query = new Query().addCriterion(Entity.type, "nodeB", QueryCriterionType.Is);
         List<String> subFields = Lists.newArrayList("idC");
-        IQuery subNodeQuery = new Query().addCriterion(Entity.type,"nodeC",QueryCriterionType.Is).addCriterion(MemoryChainProcessor.superNode,null,QueryCriterionType.NotExists);
+        IQuery subNodeQuery = new Query().addCriterion(Entity.type, "nodeC", QueryCriterionType.Is).addCriterion(MemoryChainProcessor.superNode, null, QueryCriterionType.NotExists);
         List<String> superFields = Lists.newArrayList("idA");
-        IQuery supêrNodeQuery = new Query().addCriterion(Entity.type,"nodeA",QueryCriterionType.Is);
-        IQuery completeQuery = new Query().addCriterion(MemoryChainProcessor.superNode, null, QueryCriterionType.Exists).addCriterion(MemoryChainProcessor.subNodes,1,QueryCriterionType.Count);
+        IQuery supêrNodeQuery = new Query().addCriterion(Entity.type, "nodeA", QueryCriterionType.Is);
+        IQuery completeQuery = new Query().addCriterion(MemoryChainProcessor.superNode, null, QueryCriterionType.Exists).addCriterion(MemoryChainProcessor.subNodes, 1, QueryCriterionType.Count);
         List<String> commands = Lists.newArrayList();
         commands.add("MINIMUM @timestart start");
         commands.add("MAXIMUM @timestart stop");
@@ -70,7 +77,7 @@ public class MemoryChainProcessorTest extends ProcessorTest {
         MemoryChainProcessorConfiguration configurationWrite = new MemoryChainProcessorConfiguration();
         configurationWrite.setName(name);
         configurationWrite.setChainingList(Lists.newArrayList(chaining));
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             MemoryChainProcessorConfiguration configurationRead = (MemoryChainProcessorConfiguration) read(file);
@@ -84,32 +91,13 @@ public class MemoryChainProcessorTest extends ProcessorTest {
     @Test
     public void testChaine() throws Exception {
 
-        FileConfigurationFactory factory = new FileConfigurationFactory("src/test/resources/chain");
-        factory.start();
-
-        EntityBusManager entityBusManager = new EntityBusManager("entityBusManager");
-        entityBusManager.start();
-
-        StoreFactory storeFactory = new StoreFactory("storeFactory", factory);
-        storeFactory.start();
-
-        StoreManager storeManager = new StoreManager("storeManager", storeFactory);
-        storeManager.start();
-
-        ProcessorFactory processorFactory = new ProcessorFactory(entityBusManager, storeManager, factory);
-        processorFactory.start();
-
-        ProcessorManager processorManager = new ProcessorManager("processorManager", processorFactory);
-        processorManager.start();
-
-
-        IProcessor eventProcessor = processorManager.load("eventProcessor");
-        IProcessor nodeBusProcessor = processorManager.load("nodeBusProcessor");
-        IProcessor storeProcessor = processorManager.load("storeProcessor");
-        IProcessor latencyProcessor = processorManager.load("latencyProcessor");
-        IProcessor nodeProcessor = processorManager.load("nodeProcessor");
-        IProcessor chainProcessor = processorManager.load("chainProcessor");
-        IProcessor chainBusProcessor = processorManager.load("chainBusProcessor");
+        IProcessor eventProcessor = manager.get("eventProcessor");
+        IProcessor nodeBusProcessor = manager.get("nodeBusProcessor");
+        IProcessor storeProcessor = manager.get("storeProcessor");
+        IProcessor latencyProcessor = manager.get("latencyProcessor");
+        IProcessor nodeProcessor = manager.get("nodeProcessor");
+        IProcessor chainProcessor = manager.get("chainProcessor");
+        IProcessor chainBusProcessor = manager.get("chainBusProcessor");
 
 
         int chainCount = 100;
@@ -201,7 +189,7 @@ public class MemoryChainProcessorTest extends ProcessorTest {
         }
         Thread.sleep(500);
 
-        IStore nodeStore = storeManager.load("store");
+        IStore nodeStore = manager.get("store");
 
         checkNodes("nodeA", chainCount, 2, nodeStore);
         checkNodes("nodeB", chainCount, 2, nodeStore);
@@ -219,32 +207,32 @@ public class MemoryChainProcessorTest extends ProcessorTest {
         assertNotNull(nodes);
         assertEquals(nodeCount, nodes.size());
         for (IEntity node : nodes) {
-            checkNode(nodeType,node,nodeStore);
+            checkNode(nodeType, node, nodeStore);
         }
     }
 
-    private void checkNode(String nodeType, IEntity node,IStore nodeStore) throws StoreException {
-        if ( "nodeA".equals(nodeType)) {
+    private void checkNode(String nodeType, IEntity node, IStore nodeStore) throws StoreException {
+        if ("nodeA".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
-            if (subNodes.size() > 1 ) {
-              fail(String.format("nodeA : %s  subNodes %s %s",node.getId(), subNodes.get(0),subNodes.get(1)));
+            if (subNodes.size() > 1) {
+                fail(String.format("nodeA : %s  subNodes %s %s", node.getId(), subNodes.get(0), subNodes.get(1)));
             }
-            assertEquals(1,subNodes.size());
+            assertEquals(1, subNodes.size());
             IEntity subNode = nodeStore.read(subNodes.get(0));
             assertNotNull(subNode);
-            assertEquals("nodeB",subNode.getType());
-            assertEquals(node.getValueAsString("idA"),subNode.getValueAsString("idA"));
+            assertEquals("nodeB", subNode.getType());
+            assertEquals(node.getValueAsString("idA"), subNode.getValueAsString("idA"));
             IEntity superNode = nodeStore.read(node.getValueAsString(MemoryChainProcessor.superNode));
             assertNull(superNode);
         }
 
-        if ( "nodeB".equals(nodeType)) {
+        if ("nodeB".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
-            assertEquals(1,subNodes.size());
+            assertEquals(1, subNodes.size());
             IEntity subNode = nodeStore.read(subNodes.get(0));
             assertNotNull(subNode);
-            assertEquals("nodeC",subNode.getType());
-            assertEquals(node.getValueAsString("idB"),subNode.getValueAsString("idB"));
+            assertEquals("nodeC", subNode.getType());
+            assertEquals(node.getValueAsString("idB"), subNode.getValueAsString("idB"));
             IEntity superNode = nodeStore.read(node.getValueAsString(MemoryChainProcessor.superNode));
             assertNotNull(superNode);
             assertEquals("nodeA", superNode.getType());
@@ -252,36 +240,36 @@ public class MemoryChainProcessorTest extends ProcessorTest {
         }
 
 
-        if ( "nodeC".equals(nodeType)) {
+        if ("nodeC".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
-            assertEquals(1,subNodes.size());
+            assertEquals(1, subNodes.size());
             IEntity subNode = nodeStore.read(subNodes.get(0));
             assertNotNull(subNode);
-            assertEquals("nodeD",subNode.getType());
-            assertEquals(node.getValueAsString("idC"),subNode.getValueAsString("idC"));
+            assertEquals("nodeD", subNode.getType());
+            assertEquals(node.getValueAsString("idC"), subNode.getValueAsString("idC"));
             IEntity superNode = nodeStore.read(node.getValueAsString(MemoryChainProcessor.superNode));
             assertNotNull(superNode);
             assertEquals("nodeB", superNode.getType());
             assertEquals(node.getValueAsString("idB"), superNode.getValueAsString("idB"));
         }
 
-        if ( "nodeD".equals(nodeType)) {
+        if ("nodeD".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
-            assertEquals(1,subNodes.size());
+            assertEquals(1, subNodes.size());
             IEntity subNode = nodeStore.read(subNodes.get(0));
             assertNotNull(subNode);
-            assertEquals("nodeE",subNode.getType());
-            assertEquals(node.getValueAsString("idD"),subNode.getValueAsString("idD"));
+            assertEquals("nodeE", subNode.getType());
+            assertEquals(node.getValueAsString("idD"), subNode.getValueAsString("idD"));
             IEntity superNode = nodeStore.read(node.getValueAsString(MemoryChainProcessor.superNode));
             assertNotNull(superNode);
             assertEquals("nodeC", superNode.getType());
             assertEquals(node.getValueAsString("idC"), superNode.getValueAsString("idC"));
         }
 
-        if ( "nodeE".equals(nodeType)) {
+        if ("nodeE".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
-            assertEquals(10,subNodes.size());
-            subNodes.forEach( n-> {
+            assertEquals(10, subNodes.size());
+            subNodes.forEach(n -> {
                 IEntity subNode = null;
                 try {
                     subNode = nodeStore.read(n);
@@ -289,8 +277,8 @@ public class MemoryChainProcessorTest extends ProcessorTest {
                     fail(e.getMessage());
                 }
                 assertNotNull(subNode);
-                assertEquals("nodeF",subNode.getType());
-                assertEquals(node.getValueAsString("idE"),subNode.getValueAsString("idE"));
+                assertEquals("nodeF", subNode.getType());
+                assertEquals(node.getValueAsString("idE"), subNode.getValueAsString("idE"));
             });
             IEntity superNode = nodeStore.read(node.getValueAsString(MemoryChainProcessor.superNode));
             assertNotNull(superNode);
@@ -298,10 +286,10 @@ public class MemoryChainProcessorTest extends ProcessorTest {
             assertEquals(node.getValueAsString("idD"), superNode.getValueAsString("idD"));
         }
 
-        if ( "nodeF".equals(nodeType)) {
+        if ("nodeF".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
-            assertEquals(10,subNodes.size());
-            subNodes.forEach( n-> {
+            assertEquals(10, subNodes.size());
+            subNodes.forEach(n -> {
                 IEntity subNode = null;
                 try {
                     subNode = nodeStore.read(n);
@@ -318,7 +306,7 @@ public class MemoryChainProcessorTest extends ProcessorTest {
             assertEquals(node.getValueAsString("idE"), superNode.getValueAsString("idE"));
         }
 
-        if ( "nodeG".equals(nodeType)) {
+        if ("nodeG".equals(nodeType)) {
             List<String> subNodes = node.getValueAsList(MemoryChainProcessor.subNodes);
             assertNull(subNodes);
             IEntity superNode = nodeStore.read(node.getValueAsString(MemoryChainProcessor.superNode));
@@ -329,5 +317,10 @@ public class MemoryChainProcessorTest extends ProcessorTest {
         // fail("Unknown node type "+nodeType);
     }
 
+
+    private Event getEvent(String type) {
+        Event event = new Event(type);
+        return event;
+    }
 
 }

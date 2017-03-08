@@ -1,6 +1,6 @@
 package monevent.common.process.alert;
 
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.alert.Alert;
 import monevent.common.model.query.IQuery;
@@ -12,19 +12,19 @@ import java.util.concurrent.TimeUnit;
  * Created by steph on 23/03/2016.
  */
 public abstract class AlertProcessorBase extends ProcessorBase {
-    private final EntityBusManager entityBusManager;
+    private final Manager manager;
     private final String alertBus;
     private final String userMessage;
     private final int closeAfterDelay;
     private final TimeUnit closeAfterDelayTimeUnit;
 
 
-    protected AlertProcessorBase(String name, IQuery query, EntityBusManager entityBusManager, String alertBus, String userMessage, int closeAfterDelay, TimeUnit closeAfterDelayTimeUnit) {
+    protected AlertProcessorBase(String name, IQuery query, Manager manager, String alertBus, String userMessage, int closeAfterDelay, TimeUnit closeAfterDelayTimeUnit) {
         super(name, query);
         this.userMessage = userMessage;
         this.closeAfterDelay = closeAfterDelay;
         this.closeAfterDelayTimeUnit = closeAfterDelayTimeUnit;
-        this.entityBusManager = entityBusManager;
+        this.manager = manager;
         this.alertBus = alertBus;
     }
 
@@ -49,7 +49,7 @@ public abstract class AlertProcessorBase extends ProcessorBase {
                 alert.isToBeClosed(true);
             }
 
-            publish(entityBusManager,alertBus,alert);
+            publish(manager,alertBus,alert);
         }
         return alert;
     }

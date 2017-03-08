@@ -1,12 +1,10 @@
 package monevent.common.process.alert;
 
 import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
-import monevent.common.process.ProcessorManager;
-import monevent.common.store.StoreManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -97,8 +95,8 @@ public class ThresholdAlertProcessorConfiguration extends AlertProcessorConfigur
     }
 
     @Override
-    public IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new ThresholdAlertProcessor(getName(), getQuery(), entityBusManager, getAlertBus(),
+    public IProcessor doBuild(Manager manager) {
+        return new ThresholdAlertProcessor(getName(), getQuery(), manager, getAlertBus(),
                 getUserMessage(),
                 getCloseAfterDelay(),
                 getCloseAfterDelayTimeUnit(),

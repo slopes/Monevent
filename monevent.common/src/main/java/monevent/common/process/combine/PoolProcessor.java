@@ -1,12 +1,12 @@
 package monevent.common.process.combine;
 
 import com.google.common.util.concurrent.*;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorBase;
 import monevent.common.process.ProcessorException;
-import monevent.common.process.ProcessorManager;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -18,14 +18,14 @@ import java.util.concurrent.ThreadFactory;
 public class PoolProcessor extends ProcessorBase {
     private ListeningExecutorService executorService;
     private final int poolSize;
-    private final ProcessorManager processorManager;
+    private final Manager manager;
     private final String processorName;
     private final FutureCallback<IEntity> processCallback;
 
-    public PoolProcessor(String name, IQuery query, int poolSize, ProcessorManager processorManager, String processorName) {
+    public PoolProcessor(String name, IQuery query, int poolSize, Manager manager, String processorName) {
         super(name, query);
         this.poolSize = poolSize;
-        this.processorManager = processorManager;
+        this.manager = manager;
         this.processorName = processorName;
         this.processCallback = new ProcessCallback();
     }
@@ -33,7 +33,7 @@ public class PoolProcessor extends ProcessorBase {
     @Override
     protected IEntity doProcess(IEntity entity) throws Exception {
         if (this.executorService != null && !this.executorService.isTerminated()) {
-            IProcessor processor = this.processorManager.load(this.processorName);
+            IProcessor processor = this.manager.get(this.processorName);
             if (processor != null) {
                 ListenableFuture<IEntity> result = this.executorService.submit(new Process(entity, processor));
                 Futures.addCallback(result, this.processCallback);
@@ -63,7 +63,7 @@ public class PoolProcessor extends ProcessorBase {
 
     private class ProcessCallback implements FutureCallback<IEntity> {
         public void onSuccess(IEntity entity) {
-            debug("Successfully process %s : %s",entity.getName(),entity.getId());
+            debug("Successfully process %s : %s",entity.getId(),entity.getId());
         }
 
         public void onFailure(Throwable error) {

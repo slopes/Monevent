@@ -1,6 +1,7 @@
 package monevent.server.services;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import io.dropwizard.setup.Environment;
 import monevent.common.model.configuration.Configuration;
@@ -12,13 +13,26 @@ import monevent.common.model.configuration.ConfigurationException;
  */
 public abstract class ServiceConfiguration extends Configuration
 {
+    @JsonIgnore
+    private Environment environment;
+
     protected ServiceConfiguration() {
+        setCategory("service");
     }
 
     protected ServiceConfiguration(String name) {
         super(name);
+        setCategory("service");
     }
 
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     @Override
     public void check() throws ConfigurationException {
@@ -26,5 +40,5 @@ public abstract class ServiceConfiguration extends Configuration
             throw new ConfigurationException("The service name cannot be null or empty.");
     }
 
-    public abstract IService build(Environment environment,IServiceConfigurationFactory serviceConfigurationFactory);
+
 }

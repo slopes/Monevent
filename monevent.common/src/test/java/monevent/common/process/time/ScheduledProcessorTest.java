@@ -1,19 +1,19 @@
 package monevent.common.process.time;
 
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.communication.EntityBusConfiguration;
 import monevent.common.communication.IEntityBus;
 import monevent.common.model.IEntity;
-import monevent.common.model.configuration.factory.FileConfigurationFactory;
+import monevent.common.model.configuration.Configuration;
+import monevent.common.model.configuration.factory.file.FileConfigurationFactory;
+import monevent.common.model.configuration.factory.memory.MemoryConfigurationFactory;
 import monevent.common.model.query.Query;
 import monevent.common.model.query.QueryCriterionType;
 import monevent.common.model.time.JobExecution;
 import monevent.common.process.*;
-import monevent.common.process.store.StoreProcessorConfiguration;
 import monevent.common.store.IStore;
+import monevent.common.store.StoreConfiguration;
 import monevent.common.store.StoreException;
-import monevent.common.store.StoreFactory;
-import monevent.common.store.StoreManager;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +36,11 @@ public class ScheduledProcessorTest extends ProcessorTest {
         stop();
     }
 
+    @Override
+    protected void addConfiguration() {
+        this.factory.addFactory( new FileConfigurationFactory<>("configurationFileFactory", "src/test/resources/chain/"));
+    }
+
     @Test
     public void testConfiguration() {
         String name = "scheduledProcessor";
@@ -44,7 +49,7 @@ public class ScheduledProcessorTest extends ProcessorTest {
         String cronExpression = "0/5 * * * * ?";
         String processor = "subProcessor";
         ProcessorConfiguration configurationWrite = new ScheduledProcessorConfiguration(name, query, cronExpression, Lists.newArrayList(processor));
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             ScheduledProcessorConfiguration configurationRead = (ScheduledProcessorConfiguration) read(file);
@@ -59,26 +64,6 @@ public class ScheduledProcessorTest extends ProcessorTest {
     @Test
     public void testScheduledProcessorWithNoError() throws InterruptedException, StoreException {
 
-
-        FileConfigurationFactory factory = new FileConfigurationFactory("src/test/resources/chain");
-        factory.start();
-
-        EntityBusManager entityBusManager = new EntityBusManager("entityBusManager");
-        entityBusManager.start();
-
-        StoreFactory storeFactory = new StoreFactory("storeFactory", factory);
-        storeFactory.start();
-
-        StoreManager storeManager = new StoreManager("storeManager", storeFactory);
-        storeManager.start();
-
-        ProcessorFactory processorFactory = new ProcessorFactory(entityBusManager, storeManager, factory);
-        processorFactory.start();
-
-        ProcessorManager processorManager = new ProcessorManager("processorManager", processorFactory);
-        processorManager.start();
-
-
         String name = "scheduledProcessor";
         Query query = new Query();
         query.addCriterion("processor", name, QueryCriterionType.Is);
@@ -87,12 +72,12 @@ public class ScheduledProcessorTest extends ProcessorTest {
         configuration.setName("scheduledProcessor");
         configuration.setCronExpression(cronExpression);
         configuration.setProcessors(Lists.newArrayList("storeProcessor"));
-        IProcessor processor = configuration.build(entityBusManager, storeManager, processorManager);
+        IProcessor processor = configuration.build(this.manager);
         processor.start();
         try {
             Thread.sleep(2000);
 
-            IStore store = storeManager.load("store");
+            IStore store = this.manager.get("store");
             Assert.assertNotNull(store);
             List<IEntity> executions = store.read(new Query());
             Assert.assertNotNull(executions);
@@ -101,34 +86,14 @@ public class ScheduledProcessorTest extends ProcessorTest {
 
         } finally {
             processor.stop();
-            processorManager.stop();
-            factory.stop();
         }
     }
 
     @Test
     public void testScheduledProcessorWithError() throws InterruptedException, StoreException {
-        FileConfigurationFactory factory = new FileConfigurationFactory("src/test/resources/chain");
-        factory.start();
+        IProcessor storeProcessor = this.manager.get("storeProcessor");
 
-        EntityBusManager entityBusManager = new EntityBusManager("entityBusManager");
-        entityBusManager.start();
-
-        StoreFactory storeFactory = new StoreFactory("storeFactory", factory);
-        storeFactory.start();
-
-        StoreManager storeManager = new StoreManager("storeManager", storeFactory);
-        storeManager.start();
-
-        ProcessorFactory processorFactory = new ProcessorFactory(entityBusManager, storeManager, factory);
-        processorFactory.start();
-
-        ProcessorManager processorManager = new ProcessorManager("processorManager", processorFactory);
-        processorManager.start();
-
-        IProcessor storeProcessor = processorManager.load("storeProcessor");
-
-        IEntityBus jobBus = entityBusManager.load("jobBus");
+        IEntityBus jobBus = this.manager.get("jobBus");
         jobBus.register(storeProcessor);
 
         String name = "scheduledProcessor";
@@ -139,12 +104,12 @@ public class ScheduledProcessorTest extends ProcessorTest {
         configuration.setName("scheduledProcessor");
         configuration.setCronExpression(cronExpression);
         configuration.setProcessors(Lists.newArrayList("crashProcessor"));
-        IProcessor processor = configuration.build(entityBusManager, storeManager, processorManager);
+        IProcessor processor = configuration.build(this.manager);
         processor.start();
         try {
             Thread.sleep(2000);
 
-            IStore store = storeManager.load("store");
+            IStore store = this.manager.get("store");
             Assert.assertNotNull(store);
             List<IEntity> executions = store.read(new Query());
             Assert.assertNotNull(executions);
@@ -157,8 +122,6 @@ public class ScheduledProcessorTest extends ProcessorTest {
 
         } finally {
             processor.stop();
-            processorManager.stop();
-            factory.stop();
         }
     }
 

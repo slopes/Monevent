@@ -1,11 +1,10 @@
 package monevent.common.process;
 
 import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.Configuration;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
-import monevent.common.store.StoreManager;
 
 /**
  * Created by steph on 12/03/2016.
@@ -16,10 +15,12 @@ public abstract class ProcessorConfiguration extends Configuration {
 
     protected ProcessorConfiguration() {
         super();
+        setCategory("processor");
     }
 
     protected ProcessorConfiguration(String name, IQuery query) {
         super(name);
+        setCategory("processor");
         this.query = query;
     }
 
@@ -31,9 +32,10 @@ public abstract class ProcessorConfiguration extends Configuration {
         this.query = query;
     }
 
-    public IProcessor build(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) throws ConfigurationException {
+    @Override
+    public IProcessor build(Manager manager) throws ConfigurationException {
         try {
-            return doBuild(entityBusManager,storeManager,processorManager);
+            return doBuild(manager);
         } catch (Exception error) {
             throw new ConfigurationException(error);
         }
@@ -45,7 +47,7 @@ public abstract class ProcessorConfiguration extends Configuration {
             throw new ConfigurationException("The name of the processor cannot be null.");
     }
 
-    protected abstract IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager);
+    protected abstract IProcessor doBuild(Manager manager);
 
 
 }

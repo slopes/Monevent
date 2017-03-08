@@ -9,48 +9,48 @@ import java.util.List;
 /**
  * Created by slopes on 18/02/17.
  */
-public class CrashingStore extends ManageableBase implements IStore {
+public class CrashingStore extends StoreBase implements IStore {
     protected CrashingStore(String name) {
         super(name);
     }
 
     @Override
-    public void create(List<IEntity> entities) throws StoreException {
+    public void doCreate(List<IEntity> entities) throws StoreException {
         throw new StoreException();
     }
 
     @Override
-    public void create(IEntity entity) throws StoreException {
+    public void doCreate(IEntity entity) throws StoreException {
         throw new StoreException("Cannot create entity");
     }
 
     @Override
-    public IEntity read(String id) throws StoreException {
+    public IEntity doRead(String id) throws StoreException {
         throw new StoreException("Cannot read entity");
     }
 
     @Override
-    public List<IEntity> read(IQuery query) throws StoreException {
+    public List<IEntity> doRead(IQuery query) throws StoreException {
         throw new StoreException("Cannot create entity");
     }
 
     @Override
-    public void update(List<IEntity> entities) throws StoreException {
+    public void doUpdate(List<IEntity> entities) throws StoreException {
         throw new StoreException("Cannot update entity", new Exception("because it's impossible"));
     }
 
     @Override
-    public void update(IEntity entity) throws StoreException {
+    public void doUpdate(IEntity entity) throws StoreException {
         throw new StoreException(new Exception("Cannot update entity"));
     }
 
     @Override
-    public void delete(String id) throws StoreException {
+    public void doDelete(String id) throws StoreException {
         throw new StoreException(new Exception("Cannot delete entity"));
     }
 
     @Override
-    public void delete(IQuery IQuery) throws StoreException {
+    public void doDelete(IQuery IQuery) throws StoreException {
         throw new StoreException(new Exception("Cannot delete entity"));
     }
 

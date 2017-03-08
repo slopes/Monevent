@@ -11,21 +11,20 @@ public class Event extends Entity {
     protected static String host = "host";
     protected static String process = "process";
     protected static String thread = "threads";
+    protected static String name = "name";
+
 
     public Event(Map data) {
         super(data);
     }
 
     public Event() {
-        super();
+        super("event");
     }
 
-    public Event(String type) {
+    public Event(String name) {
         super(type);
-    }
-
-    public Event(String name, String type) {
-        super(name, type);
+        setName(name);
     }
 
 
@@ -65,6 +64,12 @@ public class Event extends Entity {
         setValue(Event.component, component);
     }
 
+    public String getName() {
+        return getValueAsString(Event.name);
+    }
 
+    public void setName(String name) {
+        setValue(Event.name, name);
+    }
 
 }

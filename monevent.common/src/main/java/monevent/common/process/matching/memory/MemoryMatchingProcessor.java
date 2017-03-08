@@ -3,7 +3,7 @@ package monevent.common.process.matching.memory;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.matching.*;
@@ -24,8 +24,8 @@ public class MemoryMatchingProcessor extends MatchingProcessorBase {
     private final Map<Matching, LoadingCache<IMemoryCacheKey, MatchingResult>> results;
     private final Map<Matching, IMatchingChecker> checkers;
 
-    public MemoryMatchingProcessor(String name, IQuery query, List<Matching> matchingList, EntityBusManager entityBusManager, String resultBus) {
-        super(name, query, matchingList, entityBusManager, resultBus);
+    public MemoryMatchingProcessor(String name, IQuery query, List<Matching> matchingList, Manager manager, String resultBus) {
+        super(name, query, matchingList, manager, resultBus);
 
         this.factories = new ConcurrentHashMap<>();
         matchingList.forEach(m -> this.factories.put(m, new MemoryCacheKeyFactory(m)));

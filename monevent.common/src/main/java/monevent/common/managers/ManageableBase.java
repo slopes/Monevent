@@ -1,6 +1,7 @@
 package monevent.common.managers;
 
-import monevent.common.communication.EntityBusManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import monevent.common.communication.IEntityBus;
 import monevent.common.model.IEntity;
 import monevent.common.model.fault.Fault;
@@ -21,17 +22,25 @@ public abstract class ManageableBase implements IManageable {
     private static final String UNKNOWN_HOST = "undefined";
     private static String hostname;
     private static String component;
+    private static ObjectMapper mapper;
 
     static {
         try {
-            hostname = InetAddress.getLocalHost().getHostName();
+            ManageableBase.mapper = new ObjectMapper();
+            ManageableBase.mapper.registerModule(new JodaModule());
+            ManageableBase.mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            ManageableBase.hostname = InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException error) {
-            hostname = ManageableBase.UNKNOWN_HOST;
+            ManageableBase.hostname = ManageableBase.UNKNOWN_HOST;
         }
     }
 
     public static String getComponent() {
         return ManageableBase.component;
+    }
+
+    public static ObjectMapper getMapper() {
+        return ManageableBase.mapper;
     }
 
     private static IEntityBus entityBus;
@@ -155,7 +164,7 @@ public abstract class ManageableBase implements IManageable {
 
     protected abstract void doStop();
 
-    protected boolean publish(EntityBusManager entityBusManager, String bus, IEntity entity) {
+    protected boolean publish(Manager manager, String bus, IEntity entity) {
         if (entity == null) {
             warn("Cannot publish null entity");
             return false;
@@ -166,12 +175,12 @@ public abstract class ManageableBase implements IManageable {
             return false;
         }
 
-        if (entityBusManager == null) {
-            warn("Entity manager is not initialized.");
+        if (manager == null) {
+            warn("Manager is not initialized.");
             return false;
         }
 
-        IEntityBus entityBus = entityBusManager.load(bus);
+        IEntityBus entityBus = manager.get(bus);
         if (entityBus != null) {
             entityBus.publish(entity);
             return true;

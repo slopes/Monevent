@@ -1,14 +1,11 @@
 package monevent.common.process.command;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
-import monevent.common.process.ProcessorManager;
-import monevent.common.store.StoreManager;
 
 import java.util.List;
 
@@ -45,7 +42,7 @@ public class CommandProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
-    protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
+    protected IProcessor doBuild(Manager manager) {
         return new CommandProcessor(getName(), getQuery(), getCommands());
     }
 }

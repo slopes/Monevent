@@ -1,15 +1,12 @@
 package monevent.common.process.store;
 
 import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
-import monevent.common.model.query.IQuery;
 import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
-import monevent.common.process.ProcessorManager;
 import monevent.common.store.IStore;
-import monevent.common.store.StoreManager;
 
 /**
  * Created by steph on 12/03/2016.
@@ -22,7 +19,7 @@ public class StoreProcessorConfiguration extends ProcessorConfiguration {
         super();
     }
 
-    public StoreProcessorConfiguration(String name, Query query,String storeName) {
+    public StoreProcessorConfiguration(String name, Query query, String storeName) {
         super(name, query);
         this.storeName = storeName;
     }
@@ -43,8 +40,8 @@ public class StoreProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
-    public IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        IStore store = storeManager.load(this.getStoreName());
+    public IProcessor doBuild(Manager manager) {
+        IStore store = manager.get(this.getStoreName());
         if (store != null) {
             return new StoreProcessor(getName(), getQuery(), store);
         }

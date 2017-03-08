@@ -15,19 +15,11 @@ public class JobExecution extends Timestamp {
     public static String processor = "processor";
 
     public JobExecution() {
-        super("jobExecution");
-    }
-
-    public JobExecution(String name) {
-        super(name, "jobExecution");
+        super();
     }
 
     public JobExecution(Map data) {
         super(data);
-    }
-
-    public JobExecution(String name, Entity entity, String... fieldsToCopy) {
-        super(name, "jobExecution", entity, fieldsToCopy);
     }
 
     public String getProcessor() {

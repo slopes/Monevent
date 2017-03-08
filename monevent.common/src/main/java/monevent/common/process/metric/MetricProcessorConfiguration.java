@@ -1,13 +1,11 @@
 package monevent.common.process.metric;
 
 import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.Query;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
-import monevent.common.process.ProcessorManager;
-import monevent.common.store.StoreManager;
 
 /**
  * Created by steph on 12/03/2016.
@@ -78,10 +76,10 @@ public class MetricProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
-    public IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
+    public IProcessor doBuild(Manager manager) {
         return new MetricProcessor(this.getName(),
                 getQuery(),
-                entityBusManager,
+                manager,
                 getMetricBus(),
                 getValueField(),
                 getHighestTrackableValue(),

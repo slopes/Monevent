@@ -1,11 +1,12 @@
 package monevent.common.process.alert;
 
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
-import monevent.common.managers.ManageableBase;
+import monevent.common.communication.EntityBusConfiguration;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
 import monevent.common.model.alert.AlertPriority;
+import monevent.common.model.configuration.Configuration;
+import monevent.common.model.configuration.factory.memory.MemoryConfigurationFactory;
 import monevent.common.model.event.Event;
 import monevent.common.model.query.Query;
 import monevent.common.model.query.QueryCriterionType;
@@ -15,10 +16,11 @@ import monevent.common.process.metric.MetricProcessorConfiguration;
 import monevent.common.process.store.StoreProcessorConfiguration;
 import monevent.common.process.time.ScheduledProcessorConfiguration;
 import monevent.common.store.IStore;
-import monevent.common.store.IStoreFactory;
-import monevent.common.store.StoreManager;
-import monevent.common.store.memory.MemoryStore;
+import monevent.common.store.StoreConfiguration;
+import monevent.common.store.memory.MemoryStoreConfiguration;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -28,139 +30,85 @@ import java.util.List;
  */
 public class AlertFlowTest extends ProcessorTest {
 
-    private class AlertFlowProcessorConfigurationFactory extends ManageableBase implements IProcessorConfigurationFactory {
 
-        public AlertFlowProcessorConfigurationFactory() {
-            super("alertFlowProcessorConfigurationFactory");
-        }
-
-        @Override
-        public ProcessorConfiguration buildProcessor(String processorName) {
-
-            if (processorName.equals("metricProcessor")) {
-                MetricProcessorConfiguration processorConfiguration = new MetricProcessorConfiguration();
-                processorConfiguration.setName("metricProcessor");
-                processorConfiguration.setValueField("value");
-                processorConfiguration.setHighestTrackableValue(100000);
-                processorConfiguration.setNumberOfSignificantValueDigits(2);
-                processorConfiguration.setMetricBus("metricBus");
-                return processorConfiguration;
-            }
-
-            if (processorName.equals("alertProcessor")) {
-                MatchAlertProcessorConfiguration alertProcessorConfiguration = new MatchAlertProcessorConfiguration();
-                alertProcessorConfiguration.setName("alertProcessor");
-                Query metricQuery = new Query();
-                metricQuery.addCriterion(Entity.type, "metric", QueryCriterionType.Is);
-                alertProcessorConfiguration.setQuery(metricQuery);
-                alertProcessorConfiguration.setPriority(AlertPriority.Info);
-                alertProcessorConfiguration.setUserMessage("Hey, I saw a metric");
-                alertProcessorConfiguration.setAlertBus("alertBus");
-                return alertProcessorConfiguration;
-            }
-
-            if (processorName.equals("storeProcessor")) {
-                return new StoreProcessorConfiguration("storeProcessor",
-                        null,
-                        "alertStore");
-
-            }
-
-            if (processorName.equals("alertBusProcessor")) {
-                return new BusProcessorConfiguration("busProcessor",
-                        null,
-                        Lists.newArrayList("storeProcessor"),
-                        Lists.newArrayList("alertBus"));
-
-            }
-
-            if (processorName.equals("metricBusProcessor")) {
-                return new BusProcessorConfiguration("metricBusProcessor",
-                        null,
-                        Lists.newArrayList("alertProcessor"),
-                        Lists.newArrayList("metricBus"));
-
-            }
-
-            if (processorName.equals("scheduledProcessor")) {
-
-                ScheduledProcessorConfiguration processorConfiguration = new ScheduledProcessorConfiguration();
-                processorConfiguration.setName("scheduledProcessor");
-                processorConfiguration.setCronExpression("*/1 * * * * ?");
-                processorConfiguration.setProcessors(Lists.newArrayList("metricProcessor"));
-                return processorConfiguration;
-
-            }
+    @Override
+    protected void addConfiguration() {
+        MemoryConfigurationFactory<Configuration> configurationFactory = new MemoryConfigurationFactory("entityBusConfigurationFactory");
+        configurationFactory.add(new EntityBusConfiguration("alertBus"));
+        configurationFactory.add(new EntityBusConfiguration("metricBus"));
+        configurationFactory.add(new EntityBusConfiguration("jobBus"));
 
 
-            return null;
-        }
+        configurationFactory.add(new MemoryStoreConfiguration("alertStore"));
 
-        @Override
-        protected void doStart() {
+         MetricProcessorConfiguration processorConfiguration = new MetricProcessorConfiguration();
+        processorConfiguration.setName("metricProcessor");
+        processorConfiguration.setValueField("value");
+        processorConfiguration.setHighestTrackableValue(100000);
+        processorConfiguration.setNumberOfSignificantValueDigits(2);
+        processorConfiguration.setMetricBus("metricBus");
+        configurationFactory.add(processorConfiguration);
 
-        }
+        MatchAlertProcessorConfiguration alertProcessorConfiguration = new MatchAlertProcessorConfiguration();
+        alertProcessorConfiguration.setName("alertProcessor");
+        Query metricQuery = new Query();
+        metricQuery.addCriterion(Entity.type, "metric", QueryCriterionType.Is);
+        alertProcessorConfiguration.setQuery(metricQuery);
+        alertProcessorConfiguration.setPriority(AlertPriority.Info);
+        alertProcessorConfiguration.setUserMessage("Hey, I saw a metric");
+        alertProcessorConfiguration.setAlertBus("alertBus");
+        configurationFactory.add(alertProcessorConfiguration);
 
-        @Override
-        protected void doStop() {
+        configurationFactory.add(new StoreProcessorConfiguration("storeProcessor", null, "alertStore"));
 
-        }
+        configurationFactory.add(new BusProcessorConfiguration("alertBusProcessor",
+                null,
+                Lists.newArrayList("storeProcessor"),
+                Lists.newArrayList("alertBus")));
+
+        configurationFactory.add(new BusProcessorConfiguration("metricBusProcessor",
+                null,
+                Lists.newArrayList("alertProcessor"),
+                Lists.newArrayList("metricBus")));
+
+        ScheduledProcessorConfiguration scheduledProcessorConfiguration = new ScheduledProcessorConfiguration();
+        scheduledProcessorConfiguration.setName("scheduledProcessor");
+        scheduledProcessorConfiguration.setCronExpression("0/1 * * * * ?");
+        scheduledProcessorConfiguration.setProcessors(Lists.newArrayList("metricProcessor"));
+        configurationFactory.add(scheduledProcessorConfiguration);
+
+        this.factory.addFactory(configurationFactory);
     }
 
-    private class AlertFlowStoreFactory extends ManageableBase implements IStoreFactory {
-
-        protected AlertFlowStoreFactory() {
-            super("alertFlowStoreFactory");
-        }
-
-        @Override
-        public IStore build(String storeName) {
-            return new MemoryStore(storeName);
-        }
-
-        @Override
-        protected void doStart() {
-
-        }
-
-        @Override
-        protected void doStop() {
-
-        }
+    @Before
+    public void setUpClass() {
+        start();
     }
 
-    private class AlertFlowProcessorFactory extends ProcessorFactory {
-
-        public AlertFlowProcessorFactory(EntityBusManager entityBusManager, StoreManager storeManager) {
-            super(entityBusManager, storeManager, new AlertFlowProcessorConfigurationFactory());
-        }
+    @After
+    public void tearDownClass() {
+        stop();
     }
 
     @Test
     public void testCompleteFlow() {
 
-        EntityBusManager entityBusManager = new EntityBusManager("entityBusManager");
-        entityBusManager.start();
 
-        StoreManager storeManager = new StoreManager("storeManager", new AlertFlowStoreFactory());
-        storeManager.start();
+        IProcessor metricProcessor = this.manager.get("metricProcessor");
 
-        ProcessorManager processorManager = new ProcessorManager("processorManager", new AlertFlowProcessorFactory(entityBusManager, storeManager));
-        processorManager.start();
+        IProcessor alertBusProcessor = this.manager.get("alertBusProcessor");
 
-        IProcessor metricProcessor = processorManager.load("metricProcessor");
+        IProcessor metricBusProcessor = this.manager.get("metricBusProcessor");
 
-        IProcessor alertBusProcessor = processorManager.load("alertBusProcessor");
+        IProcessor storeProcessor = this.manager.get("storeProcessor");
 
-        IProcessor metricBusProcessor = processorManager.load("metricBusProcessor");
-
-        IProcessor scheduledProcessor = processorManager.load("scheduledProcessor");
+        IProcessor scheduledProcessor = this.manager.get("scheduledProcessor");
 
 
         try {
 
             for (int index = 0; index < 100; index++) {
-                Event event = new Event("eventName", "eventType");
+                Event event = new Event("eventType");
                 event.set("value", 100);
 
                 metricProcessor.process(event);
@@ -168,21 +116,14 @@ public class AlertFlowTest extends ProcessorTest {
 
             Thread.sleep(1000);
 
-            IStore store = storeManager.load("alertStore");
+            IStore store = this.manager.get("alertStore");
             Query alertQuery = new Query("alertQuery");
             alertQuery.addCriterion("type", "alert", QueryCriterionType.Is);
             List<IEntity> results = store.read(alertQuery);
-            Assert.assertTrue(results.size()>0);
+            Assert.assertTrue(results.size() > 0);
 
         } catch (Exception error) {
             Assert.fail(error.getMessage());
-        } finally {
-            processorManager.stop();
-            storeManager.stop();
-            ;
-            entityBusManager.stop();
         }
-
-
     }
 }

@@ -1,12 +1,12 @@
 package monevent.common.process.combine;
 
 import com.google.common.collect.ImmutableList;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorBase;
 import monevent.common.process.ProcessorException;
-import monevent.common.process.ProcessorManager;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class SequentialProcessor extends ProcessorBase {
 
-    private final ProcessorManager processorManager;
+    private final Manager manager;
     private final List<String> processors;
 
 
-    protected SequentialProcessor(String name, IQuery query, ProcessorManager processorManager, List<String> processors) {
+    protected SequentialProcessor(String name, IQuery query, Manager manager, List<String> processors) {
         super(name, query);
-        this.processorManager = processorManager;
+        this.manager = manager;
         this.processors = ImmutableList.copyOf(processors);
     }
 
@@ -29,7 +29,7 @@ public class SequentialProcessor extends ProcessorBase {
     protected IEntity doProcess(IEntity entity) throws Exception {
         try {
             for (String processorName : this.processors) {
-                IProcessor processor = this.processorManager.load(processorName);
+                IProcessor processor = this.manager.get(processorName);
                 if (processor != null) {
                     entity = processor.process(entity);
                 } else {

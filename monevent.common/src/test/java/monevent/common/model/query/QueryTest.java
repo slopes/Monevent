@@ -11,7 +11,7 @@ public class QueryTest {
 
     @Test
     public void testAND() throws Exception {
-        Entity entity = new Entity("test", "test");
+        Entity entity = new Entity("test");
         entity.setValue("a", 10);
         entity.setValue("b", 100);
 
@@ -42,7 +42,7 @@ public class QueryTest {
 
     @Test
     public void testOR() throws Exception {
-        Entity entity = new Entity("test", "test");
+        Entity entity = new Entity("test");
         entity.setValue("a", 10);
         entity.setValue("b", 100);
 
@@ -73,7 +73,7 @@ public class QueryTest {
 
     @Test
     public void testNOT() throws Exception {
-        Entity entity = new Entity("test", "test");
+        Entity entity = new Entity("test");
         entity.setValue("a", 10);
         entity.setValue("b", 100);
 

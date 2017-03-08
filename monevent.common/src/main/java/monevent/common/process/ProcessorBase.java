@@ -23,7 +23,7 @@ public abstract class ProcessorBase extends ManageableBase implements IProcessor
     @Subscribe
     @AllowConcurrentEvents
     public IEntity process(IEntity entity) throws ProcessorException {
-        String entityName = Entity.getEntityName(entity);
+        String entityName = Entity.getEntityId(entity);
 
         try {
             if (entity == null) return entity;

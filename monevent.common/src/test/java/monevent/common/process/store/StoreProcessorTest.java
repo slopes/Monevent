@@ -24,7 +24,7 @@ public class StoreProcessorTest extends ProcessorTest {
         String name = "storeProcessor";
         String storeName = "memoryStore";
         ProcessorConfiguration configurationWrite = new StoreProcessorConfiguration(name, null, storeName);
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             StoreProcessorConfiguration configurationRead = (StoreProcessorConfiguration) read(file);

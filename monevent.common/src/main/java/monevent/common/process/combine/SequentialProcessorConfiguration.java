@@ -1,13 +1,10 @@
 package monevent.common.process.combine;
 
-import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
-import monevent.common.process.ProcessorManager;
-import monevent.common.store.StoreManager;
 
 import java.util.List;
 
@@ -55,8 +52,8 @@ public class SequentialProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
-    protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new SequentialProcessor(getName(),getQuery(), processorManager, getProcessors());
+    protected IProcessor doBuild(Manager manager) {
+        return new SequentialProcessor(getName(),getQuery(), manager, getProcessors());
     }
 
 

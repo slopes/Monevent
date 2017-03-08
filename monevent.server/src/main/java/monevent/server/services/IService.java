@@ -7,5 +7,5 @@ import monevent.common.managers.IManageable;
  * Created by slopes on 22/01/17.
  */
 public interface IService extends IManageable {
-    HealthCheck getHealthCheck();
+    HealthCheck.Result check();
 }

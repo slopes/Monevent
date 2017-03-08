@@ -27,7 +27,8 @@ public class ScheduledProcessorJob implements Job {
         IProcessor processor  = (IProcessor) context.getJobDetail().getJobDataMap().get("processor");
 
         if ( processor != null) {
-            JobExecution jobExecution = new JobExecution(processor.getName());
+            JobExecution jobExecution = new JobExecution();
+            jobExecution.setProcessor(processor.getName());
             jobExecution.setFireTime(new DateTime(context.getFireTime()));
             jobExecution.setFireId(context.getFireInstanceId());
             try {

@@ -1,0 +1,22 @@
+{
+  "@class": "monevent.common.process.metric.MetricProcessorConfiguration",
+  "id": null,
+  "name": "metricProcessor",
+  "query": {
+    "@class": "monevent.common.model.query.Query",
+    "sortOrder": null,
+    "sortField": null,
+    "name": null,
+    "id": "262c7830-e8a3-11e5-89d0-08606e047568",
+    "criteria": [
+      {
+        "field": "processor",
+        "value": "metricProcessor",
+        "type": "Is"
+      }
+    ]
+  },
+  "valueField": "value",
+  "highestTrackableValue": 10000,
+  "numberOfSignificantValueDigits": 2
+}

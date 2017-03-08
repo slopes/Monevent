@@ -2,6 +2,8 @@ package monevent.common.model.configuration;
 
 import com.eaio.uuid.UUID;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import monevent.common.managers.IManageable;
+import monevent.common.managers.Manager;
 import monevent.common.model.IDistinguishable;
 
 /**
@@ -11,6 +13,8 @@ import monevent.common.model.IDistinguishable;
 public abstract class Configuration implements IDistinguishable {
     private String id;
     private String name;
+    private String category;
+
     public Configuration() {
         this.id = new UUID().toString();
     }
@@ -20,7 +24,6 @@ public abstract class Configuration implements IDistinguishable {
         this.name = name;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -29,12 +32,21 @@ public abstract class Configuration implements IDistinguishable {
         this.name = name;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    protected void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String getId() {
         return this.id;
     }
 
+    public abstract <T extends IManageable> T build(Manager manager) throws ConfigurationException;
 
-    public abstract void check() throws ConfigurationException ;
+    public abstract void check() throws ConfigurationException;
 
 }

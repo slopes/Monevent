@@ -2,6 +2,8 @@ package monevent.common.process.matching;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import monevent.common.managers.IManageable;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.Configuration;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
@@ -19,6 +21,7 @@ public class Matching extends Configuration {
     private List<String> commands;
 
     public Matching() {
+        setCategory("matching");
         this.fields = Lists.newArrayList();
     }
 
@@ -28,6 +31,7 @@ public class Matching extends Configuration {
         this.type = type;
         this.query = query;
         this.commands = commands;
+        setCategory("matching");
     }
 
     public List<String> getFields() {
@@ -81,5 +85,10 @@ public class Matching extends Configuration {
         if (getFields() == null || getFields().size() ==0)
             throw new ConfigurationException("The list of fields cannot be null or empty.");
 
+    }
+
+    @Override
+    public IManageable build(Manager manager) {
+        return null;
     }
 }

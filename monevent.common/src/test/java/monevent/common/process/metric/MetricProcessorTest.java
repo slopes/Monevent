@@ -25,7 +25,7 @@ public class MetricProcessorTest extends ProcessorTest {
         String metricBus = "metricBus";
         boolean resetOnPublish = true;
         ProcessorConfiguration configurationWrite = new MetricProcessorConfiguration(name, null,metricBus, valueField, highestTrackableValue, numberOfSignificantValueDigits);
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             MetricProcessorConfiguration configurationRead = (MetricProcessorConfiguration) read(file);

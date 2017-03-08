@@ -36,7 +36,7 @@ public class MemoryStoreTest extends ConfigurationTest {
         String name = "memoryStore";
 
         StoreConfiguration configurationWrite = new MemoryStoreConfiguration(name);
-        File file = new File("src/test/resources/config/stores/"+name+".json");
+        File file = new File("src/test/resources/config/store/"+name+".json");
         try {
             write(file, configurationWrite);
             MemoryStoreConfiguration configurationRead = (MemoryStoreConfiguration) read(file);
@@ -50,14 +50,14 @@ public class MemoryStoreTest extends ConfigurationTest {
     public void testCreateEntity() throws StoreException {
         IStore store = new MemoryStore("MemoryStore");
         store.start();
-        store.create(new Entity("B","B"));
+        store.create(new Entity("B"));
 
         IProcessor processor = new StoreProcessor("storeProcessor",null, store);
         processor.start();
 
         try {
 
-            StoreEvent storeEvent = new StoreEvent(StoreAction.CREATE, new Entity("A","A"));
+            StoreEvent storeEvent = new StoreEvent(StoreAction.CREATE, new Entity("A"));
             processor.process(storeEvent);
             IQuery query = new Query().addCriterion(Entity.type,"A", QueryCriterionType.Is);
             List<IEntity> entities = store.read(query);
@@ -74,13 +74,13 @@ public class MemoryStoreTest extends ConfigurationTest {
     public void testCreateEntityList() throws StoreException {
         IStore store = new MemoryStore("MemoryStore");
         store.start();
-        store.create(new Entity("B","B"));
+        store.create(new Entity("B"));
 
         IProcessor processor = new StoreProcessor("storeProcessor",null, store);
         processor.start();
 
         try {
-            StoreEvent storeEvent = new StoreEvent(StoreAction.CREATE, Lists.newArrayList( new Entity("A","A"),new Entity("A","A") ));
+            StoreEvent storeEvent = new StoreEvent(StoreAction.CREATE, Lists.newArrayList( new Entity("A"),new Entity("A") ));
             processor.process(storeEvent);
             IQuery query = new Query().addCriterion(Entity.type,"A", QueryCriterionType.Is);
             List<IEntity> entities = store.read(query);
@@ -98,7 +98,7 @@ public class MemoryStoreTest extends ConfigurationTest {
     public void testUpdateEntity() throws StoreException {
         IStore store = new MemoryStore("MemoryStore");
         store.start();
-        IEntity entity = new Entity("A","A");
+        IEntity entity = new Entity("A");
         store.create(entity);
 
         IProcessor processor = new StoreProcessor("storeProcessor",null, store);
@@ -124,10 +124,10 @@ public class MemoryStoreTest extends ConfigurationTest {
     public void testUpdateEntityList() throws StoreException {
         IStore store = new MemoryStore("MemoryStore");
         store.start();
-        IEntity entity1 = new Entity("A","A");
+        IEntity entity1 = new Entity("A");
         store.create(entity1);
 
-        IEntity entity2 = new Entity("A","A");
+        IEntity entity2 = new Entity("A");
         store.create(entity2);
 
         IProcessor processor = new StoreProcessor("storeProcessor",null, store);
@@ -151,10 +151,10 @@ public class MemoryStoreTest extends ConfigurationTest {
     public void testDeleteEntity() throws StoreException {
         IStore store = new MemoryStore("MemoryStore");
         store.start();
-        IEntity entity1 = new Entity("A","A");
+        IEntity entity1 = new Entity("A");
         store.create(entity1);
 
-        IEntity entity2 = new Entity("A","A");
+        IEntity entity2 = new Entity("A");
         store.create(entity2);
 
         IProcessor processor = new StoreProcessor("storeProcessor",null, store);
@@ -176,13 +176,13 @@ public class MemoryStoreTest extends ConfigurationTest {
     public void testDeleteByQuery() throws StoreException {
         IStore store = new MemoryStore("MemoryStore");
         store.start();
-        IEntity entity1 = new Entity("A","A");
+        IEntity entity1 = new Entity("A");
         store.create(entity1);
 
-        IEntity entity2 = new Entity("A","A");
+        IEntity entity2 = new Entity("A");
         store.create(entity2);
 
-        IEntity entity3 = new Entity("B","B");
+        IEntity entity3 = new Entity("B");
         store.create(entity3);
 
         IProcessor processor = new StoreProcessor("storeProcessor",null, store);

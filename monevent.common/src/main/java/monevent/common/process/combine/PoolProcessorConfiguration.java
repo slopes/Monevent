@@ -1,13 +1,11 @@
 package monevent.common.process.combine;
 
 import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.configuration.ConfigurationException;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
 import monevent.common.process.ProcessorConfiguration;
-import monevent.common.process.ProcessorManager;
-import monevent.common.store.StoreManager;
 
 /**
  * Created by slopes on 15/01/17.
@@ -43,8 +41,8 @@ public class PoolProcessorConfiguration extends ProcessorConfiguration {
     }
 
     @Override
-    protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new PoolProcessor(getName(), getQuery(), getPoolSize(), processorManager, getProcessorName());
+    protected IProcessor doBuild(Manager manager) {
+        return new PoolProcessor(getName(), getQuery(), getPoolSize(), manager, getProcessorName());
     }
 
     public void check() throws ConfigurationException {

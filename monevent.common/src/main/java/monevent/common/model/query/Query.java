@@ -36,24 +36,9 @@ public class Query implements IQuery {
         setCriteria(new ArrayList<>());
     }
 
-    public Query(IQuery query) {
-        if (query != null) {
-            setId(query.getId());
-            setName(query.getName());
-            setSortField(query.getSortField());
-            setSortOrder(query.getSortOrder());
-            setCriteria(query.getCriteria());
-        } else {
-            setId(new UUID().toString());
-            setCriteria(new ArrayList<>());
-        }
-    }
-
-    @Override
     public String getName() {
         return name;
     }
-
 
     public void setName(String name) {
         this.name = name;
@@ -106,9 +91,9 @@ public class Query implements IQuery {
 
     public Query addCriterion(String field, Object value, QueryCriterionType type) {
 
-        switch(type) {
+        switch (type) {
             case Is:
-                return addCriterion(new QueryCriterionIs(field,value));
+                return addCriterion(new QueryCriterionIs(field, value));
             case LesserThan:
                 return addCriterion(new QueryCriterionLesserThan(field, value));
             case LesserOrEqualThan:
@@ -178,7 +163,17 @@ public class Query implements IQuery {
         }
 
         public Deserializer(Query query) {
-            this.query = new Query(query);
+            this.query = new Query();
+            if (query != null) {
+                this.query.setId(query.getId());
+                this.query.setName(query.getName());
+                this.query.setSortField(query.getSortField());
+                this.query.setSortOrder(query.getSortOrder());
+                this.query.setCriteria(query.getCriteria());
+            } else {
+                this.query.setId(new UUID().toString());
+                this.query.setCriteria(new ArrayList<>());
+            }
         }
 
         public Deserializer addCriteria(List<Map> criteria) {

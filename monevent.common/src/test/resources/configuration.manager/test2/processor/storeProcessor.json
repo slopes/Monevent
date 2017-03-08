@@ -1,0 +1,15 @@
+{
+  "@class": "monevent.common.process.store.StoreProcessorConfiguration",
+  "name": "storeProcessor",
+  "query": {
+    "@class": "monevent.common.model.query.Query",
+    "criteria": [
+      {
+        "field": "processor",
+        "value": "storeProcessor",
+        "type": "Is"
+      }
+    ]
+  },
+  "storeName": "memoryStore"
+}

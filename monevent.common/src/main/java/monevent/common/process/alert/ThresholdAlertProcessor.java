@@ -1,6 +1,6 @@
 package monevent.common.process.alert;
 
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.alert.Alert;
 import monevent.common.model.alert.AlertPriority;
@@ -23,7 +23,7 @@ public class ThresholdAlertProcessor extends AlertProcessorBase {
 
     public ThresholdAlertProcessor(String name,
                                    IQuery query,
-                                   EntityBusManager entityBusManager,
+                                   Manager manager,
                                    String alertBus,
                                    String userMessage,
                                    int closeAfterDelay,
@@ -34,7 +34,7 @@ public class ThresholdAlertProcessor extends AlertProcessorBase {
                                    double lowThreshold,
                                    double infoThreshold,
                                    String valueField) {
-        super(name, query, entityBusManager, alertBus, userMessage, closeAfterDelay, closeAfterDelayTimeUnitString);
+        super(name, query, manager, alertBus, userMessage, closeAfterDelay, closeAfterDelayTimeUnitString);
         this.fatalThreshold = fatalThreshold;
         this.criticalThreshold = criticalThreshold;
         this.mediumThreshold = mediumThreshold;

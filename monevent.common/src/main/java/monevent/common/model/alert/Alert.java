@@ -31,7 +31,7 @@ public class Alert extends Entity {
     }
 
     public Alert(AlertPriority priority, String message, Entity entity, String... fieldsToCopy) {
-        super(entity.getName(),"alert",entity,fieldsToCopy);
+        super("alert",entity,fieldsToCopy);
         setPriority(priority);
         setUserMessage(message);
         setTechnicalMessage(message);
@@ -39,8 +39,8 @@ public class Alert extends Entity {
         setStatus(AlertStatus.Open);
     }
 
-    public Alert(AlertPriority priority, String name, String userMessage, String technicalMessage, String origin) {
-        super(name, "alert");
+    public Alert(AlertPriority priority,  String userMessage, String technicalMessage, String origin) {
+        super("alert");
         setPriority(priority);
         setUserMessage(userMessage);
         setTechnicalMessage(technicalMessage);

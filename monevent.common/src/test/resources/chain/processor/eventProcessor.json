@@ -1,0 +1,180 @@
+{
+  "@class": "monevent.common.process.matching.memory.MemoryMatchingProcessorConfiguration",
+  "name": "eventProcessor",
+  "matchingList": [
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idA"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventA",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeA",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idA idA"
+      ]
+    },
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idA",
+        "idB"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventB",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeB",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idA idA",
+        "COPY idB idB"
+      ]
+    },
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idB",
+        "idC"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventC",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeC",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idB idB",
+        "COPY idC idC"
+      ]
+    },
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idC",
+        "idD"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventD",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeD",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idC idC",
+        "COPY idD idD"
+      ]
+    },
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idD",
+        "idE"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventE",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeE",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idD idD",
+        "COPY idE idE"
+      ]
+    },
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idE",
+        "idF"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventF",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeF",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idE idE",
+        "COPY idF idF"
+      ]
+    },
+    {
+      "@class": "monevent.common.process.matching.Matching",
+      "fields": [
+        "idF",
+        "idG"
+      ],
+      "query": {
+        "@class": "monevent.common.model.query.Query",
+        "criteria": [
+          {
+            "field": "name",
+            "value": "eventG",
+            "type": "Is"
+          }
+        ]
+      },
+      "expectedMatch": 2,
+      "type": "nodeG",
+      "commands": [
+        "MINIMUM timestamp start start",
+        "MAXIMUM timestamp stop stop",
+        "COPY idF idF",
+        "COPY idG idG"
+      ]
+    }
+  ],
+  "resultBus": "nodeBus"
+}

@@ -1,0 +1,24 @@
+{
+  "@class": "monevent.common.process.alert.ThresholdAlertProcessorConfiguration",
+  "id": null,
+  "name": "thresholdAlertProcessor",
+  "query": {
+    "@class":"monevent.common.model.query.Query",
+    "sortOrder": null,
+    "sortField": null,
+    "name": null,
+    "criteria": [
+      {
+        "field": "processor",
+        "value": "thresholdAlertProcessor",
+        "type": "Is"
+      }
+    ]
+  },
+  "fatalThreshold": 110.0,
+  "criticalThreshold": 100.0,
+  "mediumThreshold": 90.0,
+  "lowThreshold": 90.0,
+  "infoThreshold": 70.0,
+  "valueField": "value"
+}

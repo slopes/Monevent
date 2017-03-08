@@ -1,11 +1,8 @@
 package monevent.server.services.configuration;
 
 import com.codahale.metrics.health.HealthCheck;
-import com.codahale.metrics.health.HealthCheckRegistry;
-import monevent.server.ServerConfiguration;
-import monevent.server.services.DefaultServiceConfigurationFactory;
-import monevent.server.services.IService;
-import monevent.server.services.ServiceConfiguration;
+import monevent.common.model.configuration.Configuration;
+import monevent.server.services.ServiceTest;
 import monevent.server.services.exception.ServiceException;
 
 import static org.junit.Assert.*;
@@ -13,13 +10,19 @@ import static org.junit.Assert.*;
 /**
  * Created by slopes on 22/01/17.
  */
-public class ConfigurationServiceTest {
+public class ConfigurationServiceTest extends ServiceTest {
+
+
+    public ConfigurationServiceTest() {
+        addConfiguration(new ConfigurationServiceConfiguration(configurationManager));
+    }
+
     @org.junit.Test
     public void serviceConfigurationTest() throws Exception {
-        ConfigurationService service = new ConfigurationService();
+        ConfigurationService service = new ConfigurationService(null, getConfigurationManager());
         try {
             service.start();
-            ServiceConfiguration configuration = service.getServiceConfiguration(ConfigurationService.NAME);
+            Configuration configuration = service.getServiceConfiguration(ConfigurationService.NAME);
             assertNotNull(configuration);
             assertEquals(ConfigurationService.NAME, configuration.getName());
         } finally {
@@ -29,10 +32,10 @@ public class ConfigurationServiceTest {
 
     @org.junit.Test(expected = ServiceException.class)
     public void nullServiceConfigurationTest() throws Exception {
-        ConfigurationService service = new ConfigurationService();
+        ConfigurationService service = new ConfigurationService(null, getConfigurationManager());
         try {
             service.start();
-            ServiceConfiguration configuration = service.getServiceConfiguration(null);
+            Configuration configuration = service.getServiceConfiguration(null);
         } finally {
             service.stop();
         }
@@ -40,12 +43,12 @@ public class ConfigurationServiceTest {
 
     @org.junit.Test
     public void healthCheckHealthyCheck() throws Exception {
-        ConfigurationService service = new ConfigurationService();
+        ConfigurationService service = new ConfigurationService(null, getConfigurationManager());
         try {
             service.start();
-            HealthCheck healthCheck = service.getHealthCheck();
+            HealthCheck.Result healthCheck = service.check();
             assertNotNull(healthCheck);
-            assertSame(HealthCheck.Result.healthy(), healthCheck.execute());
+            assertSame(HealthCheck.Result.healthy(), healthCheck);
         } finally {
             service.stop();
         }

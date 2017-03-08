@@ -1,6 +1,7 @@
 package monevent.common.model.fault;
 
 import monevent.common.model.Entity;
+import monevent.common.model.event.Event;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ public class Fault extends Entity {
     private static String stackTrace = "stackTrace";
     private static String component = "component";
     private static String host = "host";
+    private static String name = "name";
     public Fault() {
         super("fault");
     }
@@ -20,7 +22,8 @@ public class Fault extends Entity {
     }
 
     public Fault(String name) {
-        super(name, "fault");
+        super("fault");
+        setName(name);
     }
 
     public String getMessage() {
@@ -53,6 +56,14 @@ public class Fault extends Entity {
 
     public void setHost(String host) {
         setValue(Fault.host, host);
+    }
+
+    public String getName() {
+        return getValueAsString(Fault.name);
+    }
+
+    public void setName(String name) {
+        setValue(Fault.name, name);
     }
 }
 

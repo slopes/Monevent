@@ -30,7 +30,7 @@ public class MatchAlertProcessorTest extends ProcessorTest {
         String userMessage = "An event as occurred";
         AlertPriority priority = AlertPriority.Medium;
         ProcessorConfiguration configurationWrite = new MatchAlertProcessorConfiguration(name, null, userMessage, 0, TimeUnit.NANOSECONDS, null,priority);
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             MatchAlertProcessorConfiguration configurationRead = (MatchAlertProcessorConfiguration) read(file);

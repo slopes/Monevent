@@ -18,7 +18,6 @@ public abstract class QueryOperator implements  IQuery {
         this.id = new UUID().toString();
     }
 
-    @Override
     public String getName() {
         return name;
     }

@@ -1,15 +1,12 @@
 package monevent.common.process.chain;
 
 import com.google.common.collect.Lists;
-import monevent.common.communication.EntityBusManager;
+import monevent.common.managers.Manager;
 import monevent.common.model.IEntity;
 import monevent.common.model.command.Command;
 import monevent.common.model.command.CommandParser;
 import monevent.common.model.query.IQuery;
-import monevent.common.process.ProcessorBase;
 import monevent.common.process.QueuedProcessorBase;
-import monevent.common.process.matching.Matching;
-import monevent.common.process.matching.MatchingResult;
 import monevent.common.store.StoreException;
 
 import java.util.List;
@@ -21,16 +18,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class ChainProcessorBase extends QueuedProcessorBase {
 
-    private final EntityBusManager entityBusManager;
+    private final Manager manager;
     private final String resultBus;
     private final List<Chaining> chainingList;
     private final Map<Chaining, List<Command>> commands;
 
-    protected ChainProcessorBase(String name, IQuery query, List<Chaining> chainingList, EntityBusManager entityBusManager, String resultBus) {
+    protected ChainProcessorBase(String name, IQuery query, List<Chaining> chainingList, Manager manager, String resultBus) {
         super(name, query);
 
         this.resultBus = resultBus;
-        this.entityBusManager = entityBusManager;
+        this.manager = manager;
         this.chainingList = chainingList;
         this.commands = new ConcurrentHashMap<>();
         if (chainingList != null) {
@@ -52,7 +49,7 @@ public abstract class ChainProcessorBase extends QueuedProcessorBase {
         for (Chaining chaining : this.chainingList) {
             if ( chaining.getQuery() != null && !chaining.getQuery().match(entity)) continue;
             if (doCheck(chaining, entity)) {
-                publish(entityBusManager, this.resultBus, entity);
+                publish(manager, this.resultBus, entity);
             }
         }
     }

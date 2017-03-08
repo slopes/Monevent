@@ -14,7 +14,6 @@ public class Entity extends SafeMap implements IEntity {
 
     public static String id = "id";
     public static String type = "type";
-    public static String name = "name";
     public static String timestamp = "timestamp";
 
     public Entity() {
@@ -31,13 +30,9 @@ public class Entity extends SafeMap implements IEntity {
         setType(type);
     }
 
-    public Entity(String name, String type) {
-        this(type);
-        setName(name);
-    }
 
-    public Entity(String name, String type, Entity entity, String... fieldsToCopy) {
-        this(name, type);
+    public Entity(String type, Entity entity, String... fieldsToCopy) {
+        this(type);
         if (entity != null) {
             copyFields(entity, false, fieldsToCopy);
         }
@@ -86,15 +81,6 @@ public class Entity extends SafeMap implements IEntity {
         setValue(Entity.timestamp, timestamp);
     }
 
-    @Override
-    public String getName() {
-        return getValueAsString(Entity.name);
-    }
-
-    public void setName(String name) {
-        setValue(Entity.name, name);
-    }
-
     public Entity copyFields(Entity other, boolean overrideIfPresent, String... fieldsToCopy) {
         for (String field : fieldsToCopy) {
             if (other.containsKey(field)) {
@@ -104,10 +90,6 @@ public class Entity extends SafeMap implements IEntity {
             }
         }
         return this;
-    }
-
-    public static String getEntityName(IEntity entity) {
-        return entity == null ? "null entity" : entity.getName();
     }
 
     public static String getEntityId(IEntity entity) {

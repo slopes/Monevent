@@ -2,20 +2,18 @@ package monevent.server.services.configuration;
 
 import com.codahale.metrics.annotation.Timed;
 import com.codahale.metrics.health.HealthCheck;
+import com.google.common.base.Strings;
 import io.dropwizard.setup.Environment;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import monevent.server.services.DefaultServiceConfigurationFactory;
-import monevent.server.services.IServiceConfigurationFactory;
+import monevent.common.managers.configuration.ConfigurationManager;
+import monevent.common.model.configuration.Configuration;
 import monevent.server.services.ServiceBase;
 import monevent.server.services.ServiceConfiguration;
 import monevent.server.services.exception.ServiceException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -27,44 +25,54 @@ import javax.ws.rs.core.Response;
 @Api(value = "/configuration")
 public class ConfigurationService extends ServiceBase {
 
-    public static final String NAME = "configurationService";
+    public static final String NAME = "serviceConfigurationFactory.configurationService";
 
-    private final IServiceConfigurationFactory serviceConfigurationFactory;
+    private final ConfigurationManager configurationManager;
 
-    protected ConfigurationService() {
-        super(ConfigurationService.NAME, null);
-        this.serviceConfigurationFactory = new DefaultServiceConfigurationFactory();
-    }
 
-    public ConfigurationService(final Environment environment, final IServiceConfigurationFactory serviceConfigurationFactory) {
+    public ConfigurationService(final Environment environment, ConfigurationManager configurationManager) {
         super(ConfigurationService.NAME, environment);
-        this.serviceConfigurationFactory = serviceConfigurationFactory;
+        this.configurationManager = configurationManager;
     }
 
     @GET
     @Timed()
-    @Path("/service/{service}")
-    @ApiOperation(value = "Return configuration of a given service", response = ServiceConfiguration.class)
-    public ServiceConfiguration getServiceConfiguration(@ApiParam() @PathParam("service") final String service) throws ServiceException {
-        if (service == null) {
-            throw new ServiceException("service name cannot be null", Response.Status.BAD_REQUEST);
+    @Path("/{fullName}")
+    @ApiOperation(value = "Return the configuration of a given service", response = ServiceConfiguration.class)
+    public Configuration getServiceConfiguration(@ApiParam() @PathParam("fullName") final String fullName) throws ServiceException {
+
+        if (Strings.isNullOrEmpty(fullName)) {
+            throw new ServiceException("The configuration full name cannot be null or empty", Response.Status.BAD_REQUEST);
         }
 
         try {
-            return serviceConfigurationFactory.build(service);
+            Configuration configuration = configurationManager.get(fullName);
+            return configuration;
         } catch (Exception error) {
-            throw new ServiceException("An error occured while retrieving the configuration", error, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new ServiceException("An error occurred while retrieving the configuration", error, Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @POST
+    @Timed()
+    @Path("/")
+    @ApiOperation(value = "Return the configuration of a given service", response = ServiceConfiguration.class)
+    public void setServiceConfiguration(@ApiParam() final Configuration configuration) throws ServiceException {
+
+        if (configuration == null) {
+            throw new ServiceException("The configuration cannot be null", Response.Status.BAD_REQUEST);
+        }
+
+        try {
+            configurationManager.set(configuration);
+        } catch (Exception error) {
+            throw new ServiceException("An error occurred while retrieving the configuration", error, Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @Override
-    public HealthCheck getHealthCheck() {
-        return new HealthCheck() {
-            @Override
-            protected Result check() throws Exception {
-                return HealthCheck.Result.healthy();
-            }
-        };
+    public HealthCheck.Result check() {
+        //TODO : implements health check
+        return HealthCheck.Result.healthy();
     }
 }

@@ -32,7 +32,7 @@ public class ThresholdAlertProcessorTest extends ProcessorTest {
         double infoThreshold = 70.0;
         String valueField = "value";
         ProcessorConfiguration configurationWrite = new ThresholdAlertProcessorConfiguration(name, null, null, 0, TimeUnit.NANOSECONDS, null, fatalThreshold, criticalThreshold, mediumThreshold, lowThreshold, infoThreshold, valueField);
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             ThresholdAlertProcessorConfiguration configurationRead = (ThresholdAlertProcessorConfiguration) read(file);

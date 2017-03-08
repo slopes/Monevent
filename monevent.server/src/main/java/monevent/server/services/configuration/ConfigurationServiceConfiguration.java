@@ -1,12 +1,10 @@
 package monevent.server.services.configuration;
 
-import com.google.common.base.Strings;
-import io.dropwizard.setup.Environment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
+import monevent.common.managers.Manager;
+import monevent.common.managers.configuration.ConfigurationManager;
 import monevent.common.model.configuration.ConfigurationException;
-import monevent.common.model.configuration.factory.IConfigurationFactory;
-import monevent.server.services.IService;
-import monevent.server.services.IServiceConfigurationFactory;
 import monevent.server.services.ServiceConfiguration;
 
 /**
@@ -15,18 +13,18 @@ import monevent.server.services.ServiceConfiguration;
 @ApiModel
 public class ConfigurationServiceConfiguration extends ServiceConfiguration {
 
+    @JsonIgnore
+    private final ConfigurationManager configurationManager;
 
-    public ConfigurationServiceConfiguration() {
+    public ConfigurationServiceConfiguration(ConfigurationManager configurationManager) {
         super(ConfigurationService.NAME);
+        this.configurationManager = configurationManager;
     }
 
     @Override
-    public IService build(Environment environment, IServiceConfigurationFactory serviceConfigurationFactory) {
-        return new ConfigurationService(environment, serviceConfigurationFactory);
+    public ConfigurationService build(Manager manager) throws ConfigurationException {
+        return new ConfigurationService(getEnvironment(), this.configurationManager);
     }
 
-    @Override
-    public void check() throws ConfigurationException {
-        // There is nothing valuable to check here.
-    }
+
 }

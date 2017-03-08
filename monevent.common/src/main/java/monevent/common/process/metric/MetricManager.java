@@ -1,5 +1,6 @@
 package monevent.common.process.metric;
 
+import monevent.common.managers.IManageable;
 import monevent.common.managers.ManagerBase;
 import monevent.common.model.metric.IMetric;
 
@@ -20,6 +21,11 @@ public class MetricManager extends ManagerBase<IMetric> {
         if (this.factory != null) {
             return this.factory.build(metricName);
         }
+        return null;
+    }
+
+    @Override
+    public <T extends IManageable> T get(String manageableFullName) {
         return null;
     }
 }

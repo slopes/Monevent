@@ -34,15 +34,16 @@ public abstract class StoreBase extends ManageableBase implements IStore {
 
     @Override
     public void create(IEntity entity) throws StoreException {
-        debug("Creating entity %s ...", Entity.getEntityName(entity));
+        String id = Entity.getEntityId(entity);
+        debug("Creating entity %s ...",id );
         try {
             if (entity == null) return;
             doCreate(entity);
         } catch (Exception error) {
-            error("Cannot process entity %s.", error, Entity.getEntityName(entity));
-            throw new StoreException(trace("Cannot process entity %s.", Entity.getEntityName(entity)), error);
+            error("Cannot process entity %s.", error, id);
+            throw new StoreException(trace("Cannot process entity %s.", id), error);
         } finally {
-            debug(" ... entity %s created.", Entity.getEntityName(entity));
+            debug(" ... entity %s created.", id);
         }
     }
 
@@ -98,15 +99,15 @@ public abstract class StoreBase extends ManageableBase implements IStore {
 
     @Override
     public void update(IEntity entity) throws StoreException {
-        debug("Updating entity %s ...", Entity.getEntityName(entity));
+        debug("Updating entity %s ...", Entity.getEntityId(entity));
         try {
             if (entity == null) return;
             doUpdate(entity);
         } catch (Exception error) {
-            error("Cannot update entity %s.", error, Entity.getEntityName(entity));
-            throw new StoreException(trace("Cannot update entity %s.", Entity.getEntityName(entity)), error);
+            error("Cannot update entity %s.", error, Entity.getEntityId(entity));
+            throw new StoreException(trace("Cannot update entity %s.", Entity.getEntityId(entity)), error);
         } finally {
-            debug(" ... entity %s updated.", Entity.getEntityName(entity));
+            debug(" ... entity %s updated.", Entity.getEntityId(entity));
         }
     }
 

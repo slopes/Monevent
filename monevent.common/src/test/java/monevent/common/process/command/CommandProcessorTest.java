@@ -32,7 +32,7 @@ public class CommandProcessorTest extends ProcessorTest {
         commands.add("COPY a value");
         IQuery query = new Query().addCriterion(Entity.type, "Test", QueryCriterionType.Is);
         ProcessorConfiguration configurationWrite = new CommandProcessorConfiguration(name, query, commands);
-        File file = new File("src/test/resources/config/processors/" + name + ".json");
+        File file = new File("src/test/resources/config/processor/" + name + ".json");
         try {
             write(file, configurationWrite);
             CommandProcessorConfiguration configurationRead = (CommandProcessorConfiguration) read(file);
@@ -52,7 +52,7 @@ public class CommandProcessorTest extends ProcessorTest {
         commands.add("MINIMUM b min min");
         commands.add("COMPUTE SUBSTRACT max min d");
         ProcessorConfiguration configuration = new CommandProcessorConfiguration(name, null, commands);
-        IProcessor processor = configuration.build(null, null, null);
+        IProcessor processor = configuration.build(this.manager);
 
         try {
             processor.start();

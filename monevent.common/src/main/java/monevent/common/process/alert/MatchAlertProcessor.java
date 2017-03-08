@@ -1,7 +1,7 @@
 package monevent.common.process.alert;
 
-import monevent.common.communication.EntityBusManager;
 import monevent.common.managers.ManageableBase;
+import monevent.common.managers.Manager;
 import monevent.common.model.Entity;
 import monevent.common.model.IEntity;
 import monevent.common.model.alert.Alert;
@@ -20,13 +20,13 @@ public class MatchAlertProcessor extends AlertProcessorBase {
 
     public MatchAlertProcessor(String name,
                                IQuery query,
-                               EntityBusManager entityBusManager,
+                               Manager manager,
                                String alertBus,
                                String userMessage,
                                int closeAfterDelay,
                                TimeUnit closeAfterDelayTimeUnitString,
                                AlertPriority priority) {
-        super(name, query, entityBusManager, alertBus, userMessage, closeAfterDelay, closeAfterDelayTimeUnitString);
+        super(name, query, manager, alertBus, userMessage, closeAfterDelay, closeAfterDelayTimeUnitString);
         this.userMessage = userMessage;
         this.priority = priority;
     }

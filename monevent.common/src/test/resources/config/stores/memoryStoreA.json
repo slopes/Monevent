@@ -1,5 +1,0 @@
-{
-  "@class": "monevent.common.store.memory.MemoryStoreConfiguration",
-  "id": "925a3600-e8ad-11e5-95c6-08606e047568",
-  "name": "memoryStore"
-}

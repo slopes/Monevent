@@ -1,14 +1,10 @@
 package monevent.common.process.matching.memory;
 
-import com.google.common.base.Strings;
-import monevent.common.communication.EntityBusManager;
-import monevent.common.model.configuration.ConfigurationException;
+import monevent.common.managers.Manager;
 import monevent.common.model.query.IQuery;
 import monevent.common.process.IProcessor;
-import monevent.common.process.ProcessorManager;
 import monevent.common.process.matching.Matching;
 import monevent.common.process.matching.MatchingProcessorConfiguration;
-import monevent.common.store.StoreManager;
 
 import java.util.List;
 
@@ -30,8 +26,8 @@ public class MemoryMatchingProcessorConfiguration extends MatchingProcessorConfi
     }
 
     @Override
-    protected IProcessor doBuild(EntityBusManager entityBusManager, StoreManager storeManager, ProcessorManager processorManager) {
-        return new MemoryMatchingProcessor(getName(), getQuery(), getMatchingList(), entityBusManager, getResultBus());
+    protected IProcessor doBuild(Manager manager) {
+        return new MemoryMatchingProcessor(getName(), getQuery(), getMatchingList(), manager, getResultBus());
     }
 
 
